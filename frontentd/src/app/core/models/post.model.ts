@@ -21,7 +21,7 @@ export interface PostsRequestCriteria {
   page: number;
   pageSize: number;
   search: string;
-  category?: string;
+  category: string;
   sortBy?: SortField;
   sortOrder?: SortOrder;
 }

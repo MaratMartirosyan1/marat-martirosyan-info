@@ -12,8 +12,10 @@ export interface Post {
 
 export interface PostsResponse {
   data: Post[];
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  pageSize: number;
+  meta: {
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    pageSize: number;
+  }
 }

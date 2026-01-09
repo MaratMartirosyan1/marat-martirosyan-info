@@ -15,9 +15,18 @@ export const BLOG_LIST_CONTENT = {
     {value: 'title' as SortField, label: 'Title'},
     {value: 'readTime' as SortField, label: 'Read Time'}
   ] as const,
+  sortOptions: [
+    {label: 'Date (Newest First)', field: 'date' as SortField, order: 'desc' as SortOrder},
+    {label: 'Date (Oldest First)', field: 'date' as SortField, order: 'asc' as SortOrder},
+    {label: 'Title (A-Z)', field: 'title' as SortField, order: 'asc' as SortOrder},
+    {label: 'Title (Z-A)', field: 'title' as SortField, order: 'desc' as SortOrder},
+    {label: 'Read Time (Shortest)', field: 'readTime' as SortField, order: 'asc' as SortOrder},
+    {label: 'Read Time (Longest)', field: 'readTime' as SortField, order: 'desc' as SortOrder},
+  ] as const,
 } as const;
 
 export type BlogCategory = typeof BLOG_LIST_CONTENT.categories[number];
+export type BlogSortOption = typeof BLOG_LIST_CONTENT.sortOptions[number];
 
 export const POSTS_DEFAULT_REQUEST_CRITERIA: PostsRequestCriteria = {
   page: 1,

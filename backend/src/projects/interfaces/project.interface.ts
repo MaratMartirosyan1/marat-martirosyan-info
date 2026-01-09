@@ -12,8 +12,10 @@ export interface Project {
 
 export interface ProjectsResponse {
   data: Project[];
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  pageSize: number;
+  meta: {
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    pageSize: number;
+  }
 }

@@ -1,7 +1,7 @@
-<nav class="pagination" role="navigation" aria-label="Pagination">
+<nav class="flex items-center justify-center gap-3 mt-12 py-6" role="navigation" aria-label="Pagination">
   <button
     type="button"
-    class="pagination-btn"
+    class="flex items-center gap-2 px-5 h-11 bg-[var(--bg-surface)] border-2 border-[var(--border-color)] rounded-xl text-[var(--text-primary)] text-sm font-semibold transition-all duration-300 hover:border-angular-red hover:bg-gradient-to-br hover:from-angular-red/10 hover:to-angular-pink/10 hover:scale-105 hover:shadow-lg hover:shadow-angular-red/15 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-none"
     [disabled]="disabled() || currentPage() === 1"
     (click)="onPageChange(currentPage() - 1)"
     aria-label="Previous page"
@@ -10,15 +10,16 @@
     <span>Previous</span>
   </button>
 
-  <div class="pagination-pages">
+  <div class="flex items-center gap-2">
     @for (page of getPageNumbers(); track page) {
       @if (page === '...') {
-        <span class="pagination-ellipsis">...</span>
+        <span class="min-w-[2.75rem] h-11 flex items-center justify-center text-[var(--text-secondary)] text-sm font-semibold">...</span>
       } @else {
         <button
           type="button"
-          class="pagination-page"
-          [class.active]="page === currentPage()"
+          [class]="page === currentPage()
+            ? 'min-w-[2.75rem] h-11 px-2 bg-gradient-to-br from-angular-red to-angular-pink border-2 border-transparent rounded-xl text-white text-sm font-semibold transition-all duration-300 shadow-lg shadow-angular-red/30'
+            : 'min-w-[2.75rem] h-11 px-2 bg-[var(--bg-surface)] border-2 border-[var(--border-color)] rounded-xl text-[var(--text-primary)] text-sm font-semibold transition-all duration-300 hover:border-angular-red hover:bg-gradient-to-br hover:from-angular-red/10 hover:to-angular-pink/10 hover:scale-105 hover:shadow-lg hover:shadow-angular-red/15 disabled:opacity-40 disabled:cursor-not-allowed'"
           [disabled]="disabled()"
           (click)="onPageChange(+page)"
           [attr.aria-label]="'Page ' + page"
@@ -32,7 +33,7 @@
 
   <button
     type="button"
-    class="pagination-btn"
+    class="flex items-center gap-2 px-5 h-11 bg-[var(--bg-surface)] border-2 border-[var(--border-color)] rounded-xl text-[var(--text-primary)] text-sm font-semibold transition-all duration-300 hover:border-angular-red hover:bg-gradient-to-br hover:from-angular-red/10 hover:to-angular-pink/10 hover:scale-105 hover:shadow-lg hover:shadow-angular-red/15 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:transform-none disabled:hover:shadow-none"
     [disabled]="disabled() || currentPage() === totalPages()"
     (click)="onPageChange(currentPage() + 1)"
     aria-label="Next page"

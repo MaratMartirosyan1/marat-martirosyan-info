@@ -11,8 +11,8 @@
       </div>
 
       <div class="mb-8 space-y-4">
-        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div class="relative w-full sm:w-96">
+        <div class="flex flex-row gap-3 items-center justify-between">
+          <div class="relative flex-1 sm:max-w-md">
             <ng-icon
               name="lucideSearch"
               class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]"
@@ -22,77 +22,98 @@
               [ngModel]="requestCriteria().search"
               (ngModelChange)="onSearchChange($event)"
               placeholder="Search posts..."
-              class="w-full pl-10 pr-4 py-3 rounded-lg bg-[var(--bg-surface)] border-2 border-[var(--border-color)] focus:border-angular-red outline-none transition-colors"
+              class="w-full h-11 pl-10 pr-4 rounded-lg bg-[var(--bg-surface)] border-2 border-[var(--border-color)] focus:border-angular-red outline-none transition-colors"
+            />
+          </div>
+
+          <div class="flex gap-3">
+            <app-dropdown
+              [options]="categories"
+              [selectedOption]="selectedCategory()"
+              [mobileIcon]="'lucideFilter'"
+              [placeholder]="'Category'"
+              (optionSelected)="onCategoryChange($event)"
+            />
+
+            <app-dropdown
+              [options]="sortOptions"
+              [selectedOption]="selectedSortOption()"
+              [mobileIcon]="'lucideArrowUpDown'"
+              [placeholder]="'Sort'"
+              [displayFn]="sortDisplayFn"
+              (optionSelected)="onSortOptionChange($event)"
             />
           </div>
         </div>
       </div>
 
       @if (postsResource.isLoading()) {
-        <app-loading-spinner />
+        <app-loading-spinner/>
       } @else if (postsResource.value()) {
         @if (posts().length > 0) {
           <div class="mb-4 text-sm text-[var(--text-secondary)]">
-            Showing {{ (pagination().currentPage - 1) * requestCriteria().pageSize + 1 }}-{{ Math.min(pagination().currentPage * requestCriteria().pageSize, pagination().totalCount) }} of {{ pagination().totalCount }} posts
+            Showing {{ (pagination().currentPage - 1) * requestCriteria().pageSize + 1 }}
+            -{{ Math.min(pagination().currentPage * requestCriteria().pageSize, pagination().totalCount) }}
+            of {{ pagination().totalCount }} posts
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @for (post of posts(); track post.slug) {
-            <article
-              class="group bg-[var(--bg-surface)] rounded-xl p-6 hover:shadow-xl transition-all duration-300 animate-slide-up"
-            >
-              <a [routerLink]="['/blog', post.slug]" class="block">
-                <div class="flex items-start justify-between mb-3">
+              <article
+                class="group bg-[var(--bg-surface)] rounded-xl p-6 hover:shadow-xl transition-all duration-300 animate-slide-up"
+              >
+                <a [routerLink]="['/blog', post.slug]" class="block">
+                  <div class="flex items-start justify-between mb-3">
                   <span
                     class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-gradient-angular text-white"
                   >
                     {{ post.category }}
                   </span>
-                  @if (post.featured) {
-                    <span
-                      class="inline-flex items-center gap-1 text-xs text-angular-pink font-semibold"
-                    >
-                      <ng-icon name="lucideTag" class="w-3 h-3" />
+                    @if (post.featured) {
+                      <span
+                        class="inline-flex items-center gap-1 text-xs text-angular-pink font-semibold"
+                      >
+                      <ng-icon name="lucideTag" class="w-3 h-3"/>
                       Featured
                     </span>
-                  }
-                </div>
+                    }
+                  </div>
 
-                <h2
-                  class="text-2xl font-bold mb-3 group-hover:text-gradient-angular transition-colors"
-                >
-                  {{ post.title }}
-                </h2>
+                  <h2
+                    class="text-2xl font-bold mb-3 group-hover:text-gradient-angular transition-colors"
+                  >
+                    {{ post.title }}
+                  </h2>
 
-                <p class="text-[var(--text-secondary)] mb-4 line-clamp-2">
-                  {{ post.description }}
-                </p>
+                  <p class="text-[var(--text-secondary)] mb-4 line-clamp-2">
+                    {{ post.description }}
+                  </p>
 
-                <div class="flex flex-wrap gap-2 mb-4">
-                  @for (tag of post.tags; track tag) {
-                    <span
-                      class="px-2 py-1 text-xs rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)]"
-                    >
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    @for (tag of post.tags; track tag) {
+                      <span
+                        class="px-2 py-1 text-xs rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)]"
+                      >
                       {{ tag }}
                     </span>
-                  }
-                </div>
+                    }
+                  </div>
 
-                <div
-                  class="flex items-center justify-between text-sm text-[var(--text-secondary)]"
-                >
-                  <span>{{ post.date }}</span>
-                  @if (post.readTime) {
-                    <span class="inline-flex items-center gap-1">
-                      <ng-icon name="lucideClock" class="w-4 h-4" />
-                      {{ post.readTime }} min read
+                  <div
+                    class="flex items-center justify-between text-sm text-[var(--text-secondary)]"
+                  >
+                    <span>{{ post.date }}</span>
+                    @if (post.readTime) {
+                      <span class="inline-flex items-center gap-1">
+                      <ng-icon name="lucideClock" class="w-4 h-4"/>
+                        {{ post.readTime }} min read
                     </span>
-                  }
-                </div>
-              </a>
-            </article>
-          }
-        </div>
+                    }
+                  </div>
+                </a>
+              </article>
+            }
+          </div>
 
           @if (pagination().totalPages > 1) {
             <app-pagination
@@ -104,7 +125,8 @@
           }
         } @else {
           <div class="text-center py-12">
-            <p class="text-lg text-[var(--text-secondary)]">No posts found matching your criteria. Try adjusting your filters.</p>
+            <p class="text-lg text-[var(--text-secondary)]">No posts found matching your criteria. Try adjusting your
+              filters.</p>
           </div>
         }
       } @else {

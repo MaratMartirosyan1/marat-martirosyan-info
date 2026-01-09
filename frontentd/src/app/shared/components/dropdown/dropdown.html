@@ -1,0 +1,60 @@
+<div class="relative">
+  <button
+    type="button"
+    (click)="toggleDropdown()"
+    class="hidden md:flex items-center justify-between gap-2 px-4 h-11 min-w-[180px] rounded-lg bg-[var(--bg-surface)] border-2 border-[var(--border-color)] text-[var(--text-primary)] text-sm font-semibold transition-all duration-300 hover:border-angular-red outline-none focus:border-angular-red"
+    [class.border-angular-red]="isOpen()"
+    [attr.aria-expanded]="isOpen()"
+    aria-haspopup="listbox"
+  >
+    <span>{{ selectedOption() ? displayFn()(selectedOption()!) : placeholder() }}</span>
+    <ng-icon
+      name="lucideChevronDown"
+      class="w-4 h-4 transition-transform duration-300"
+      [class.rotate-180]="isOpen()"
+    />
+  </button>
+
+  <button
+    type="button"
+    (click)="toggleDropdown()"
+    class="md:hidden flex items-center justify-center w-11 h-11 rounded-lg bg-[var(--bg-surface)] border-2 border-[var(--border-color)] transition-all duration-300 hover:border-angular-red outline-none focus:border-angular-red"
+    [class.border-angular-red]="isOpen()"
+    [class.bg-gradient-to-br]="isOpen()"
+    [class.from-angular-red]="isOpen()"
+    [class.to-angular-pink]="isOpen()"
+    [class.text-white]="isOpen()"
+    [attr.aria-expanded]="isOpen()"
+    aria-haspopup="listbox"
+    [attr.aria-label]="'Filter by ' + placeholder()"
+  >
+    <ng-icon [name]="mobileIcon()" class="w-5 h-5" />
+  </button>
+
+  @if (isOpen()) {
+    <div
+      class="absolute z-50 mt-2 min-w-[200px] md:min-w-full right-0 rounded-lg bg-[var(--bg-surface)] border-2 border-[var(--border-color)] shadow-xl animate-fade-in"
+      role="listbox"
+    >
+      <div class="py-2">
+        @for (option of options(); track option) {
+          <button
+            type="button"
+            (click)="selectOption(option)"
+            class="w-full text-left px-4 py-2.5 text-sm transition-colors"
+            [class.bg-gradient-to-br]="option === selectedOption()"
+            [class.from-angular-red]="option === selectedOption()"
+            [class.to-angular-pink]="option === selectedOption()"
+            [class.text-white]="option === selectedOption()"
+            [class.font-semibold]="option === selectedOption()"
+            [class.hover:bg-[var(--bg-primary)]]="option !== selectedOption()"
+            role="option"
+            [attr.aria-selected]="option === selectedOption()"
+          >
+            {{ displayFn()(option) }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>
