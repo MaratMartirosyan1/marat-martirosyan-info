@@ -1,0 +1,55 @@
+[
+  {
+    "id": "angular-portfolio",
+    "title": "Angular Portfolio SSR/SSG",
+    "description": "A modern portfolio website showcasing Angular's SSR and SSG capabilities with Tailwind CSS and gradient themes.",
+    "image": "/assets/images/project-1.jpg",
+    "technologies": ["Angular", "TypeScript", "Tailwind CSS", "SSR", "SSG"],
+    "category": "Angular",
+    "demoUrl": "https://example.com",
+    "githubUrl": "https://github.com/example/portfolio",
+    "featured": true
+  },
+  {
+    "id": "task-manager",
+    "title": "Task Management App",
+    "description": "Full-stack task management application with real-time updates using WebSockets and Angular signals.",
+    "image": "/assets/images/project-2.jpg",
+    "technologies": ["Angular", "Node.js", "MongoDB", "WebSockets", "NgRx"],
+    "category": "Full-Stack",
+    "demoUrl": "https://example.com",
+    "githubUrl": "https://github.com/example/task-manager",
+    "featured": true
+  },
+  {
+    "id": "ecommerce-platform",
+    "title": "E-Commerce Platform",
+    "description": "Scalable e-commerce solution with advanced search, payment integration, and admin dashboard.",
+    "image": "/assets/images/project-3.jpg",
+    "technologies": ["Angular", "NestJS", "PostgreSQL", "Stripe", "Docker"],
+    "category": "Full-Stack",
+    "githubUrl": "https://github.com/example/ecommerce",
+    "featured": false
+  },
+  {
+    "id": "component-library",
+    "title": "Angular Component Library",
+    "description": "Open-source UI component library with accessibility features and comprehensive documentation.",
+    "image": "/assets/images/project-4.jpg",
+    "technologies": ["Angular", "TypeScript", "Storybook", "SCSS", "A11y"],
+    "category": "Open Source",
+    "demoUrl": "https://example.com",
+    "githubUrl": "https://github.com/example/components",
+    "featured": true
+  },
+  {
+    "id": "blog-cms",
+    "title": "Headless CMS for Blogs",
+    "description": "Lightweight content management system with markdown support and API-first architecture.",
+    "image": "/assets/images/project-5.jpg",
+    "technologies": ["Angular", "Express", "MongoDB", "Markdown", "REST API"],
+    "category": "Full-Stack",
+    "githubUrl": "https://github.com/example/blog-cms",
+    "featured": false
+  }
+]

@@ -1,0 +1,102 @@
+<div class="min-h-screen py-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-16 animate-fade-in">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">
+          About <span class="text-gradient-angular">Me</span>
+        </h1>
+        <p class="text-lg text-[var(--text-secondary)]">
+          Passionate about creating exceptional web experiences
+        </p>
+      </div>
+
+      <div class="mb-16 animate-slide-up">
+        <div class="bg-[var(--bg-surface)] rounded-2xl p-8 shadow-lg">
+          <h2 class="text-2xl font-bold mb-4">
+            <ng-icon name="lucideBriefcase" class="inline w-6 h-6 mr-2 text-angular-red" />
+            Professional Background
+          </h2>
+          <p class="text-[var(--text-secondary)] leading-relaxed mb-4">
+            I'm a Full-Stack Developer with a strong focus on Angular and modern web
+            technologies. With years of experience building scalable applications, I specialize
+            in creating intuitive user interfaces and robust backend systems.
+          </p>
+          <p class="text-[var(--text-secondary)] leading-relaxed">
+            My passion lies in writing clean, maintainable code and staying up-to-date with the
+            latest industry trends. I believe in continuous learning and sharing knowledge with
+            the developer community.
+          </p>
+        </div>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-2xl font-bold mb-8 text-center">
+          <ng-icon name="lucideCode2" class="inline w-6 h-6 mr-2 text-angular-purple" />
+          Skills & Technologies
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-[var(--bg-surface)] rounded-xl p-6">
+            <h3 class="font-semibold mb-4 text-angular-red">Frontend</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (skill of frontendSkills; track skill) {
+                <span
+                  class="px-3 py-1 bg-[var(--bg-primary)] rounded-full text-sm border border-[var(--border-color)]"
+                >
+                  {{ skill }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="bg-[var(--bg-surface)] rounded-xl p-6">
+            <h3 class="font-semibold mb-4 text-angular-purple">Backend</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (skill of backendSkills; track skill) {
+                <span
+                  class="px-3 py-1 bg-[var(--bg-primary)] rounded-full text-sm border border-[var(--border-color)]"
+                >
+                  {{ skill }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="bg-[var(--bg-surface)] rounded-xl p-6">
+            <h3 class="font-semibold mb-4 text-angular-pink">Tools & Others</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (skill of toolsSkills; track skill) {
+                <span
+                  class="px-3 py-1 bg-[var(--bg-primary)] rounded-full text-sm border border-[var(--border-color)]"
+                >
+                  {{ skill }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="bg-[var(--bg-surface)] rounded-xl p-6">
+            <h3 class="font-semibold mb-4 text-angular-magenta">Soft Skills</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (skill of softSkills; track skill) {
+                <span
+                  class="px-3 py-1 bg-[var(--bg-primary)] rounded-full text-sm border border-[var(--border-color)]"
+                >
+                  {{ skill }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center animate-slide-up">
+        <button
+          class="inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-gradient-angular text-white font-semibold hover:scale-105 transition-transform duration-300"
+        >
+          <ng-icon name="lucideDownload" class="w-5 h-5" />
+          Download Resume
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

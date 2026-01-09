@@ -1,0 +1,88 @@
+<div class="min-h-screen py-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 animate-fade-in">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">
+          My <span class="text-gradient-angular">Projects</span>
+        </h1>
+        <p class="text-lg text-[var(--text-secondary)]">
+          A showcase of my recent work and side projects
+        </p>
+      </div>
+
+      <div class="mb-8">
+        <div class="flex flex-wrap gap-3 justify-center">
+          @for (category of categories; track category) {
+            <button
+              (click)="selectedCategory.set(category)"
+              [class.bg-gradient-angular]="selectedCategory() === category"
+              [class.text-white]="selectedCategory() === category"
+              class="px-4 py-2 rounded-lg border border-[var(--border-color)] hover:border-angular-red transition-all"
+            >
+              {{ category }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (project of filteredProjects(); track project.id) {
+          <div
+            class="group bg-[var(--bg-surface)] rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300 animate-slide-up"
+          >
+            <div class="aspect-video bg-gradient-angular opacity-20"></div>
+
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2 group-hover:text-gradient-angular transition-colors">
+                {{ project.title }}
+              </h3>
+
+              <p class="text-sm text-[var(--text-secondary)] mb-4">{{ project.description }}</p>
+
+              <div class="flex flex-wrap gap-2 mb-4">
+                @for (tech of project.technologies; track tech) {
+                  <span
+                    class="px-2 py-1 text-xs rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)]"
+                  >
+                    {{ tech }}
+                  </span>
+                }
+              </div>
+
+              <div class="flex items-center gap-3">
+                @if (project.demoUrl) {
+                  <a
+                    [href]="project.demoUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 text-sm text-angular-purple hover:text-angular-pink transition-colors"
+                  >
+                    <ng-icon name="lucideExternalLink" class="w-4 h-4"/>
+                    Demo
+                  </a>
+                }
+                @if (project.githubUrl) {
+                  <a
+                    [href]="project.githubUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 text-sm text-angular-purple hover:text-angular-pink transition-colors"
+                  >
+                    <ng-icon name="lucideGithub" class="w-4 h-4"/>
+                    Code
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (filteredProjects().length === 0) {
+        <div class="text-center py-12">
+          <p class="text-lg text-[var(--text-secondary)]">No projects found in this category</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

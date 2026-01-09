@@ -1,0 +1,112 @@
+[
+  {
+    "slug": "getting-started-with-angular-signals",
+    "title": "Getting Started with Angular Signals",
+    "description": "Learn how to use Angular Signals for reactive state management in your applications with practical examples.",
+    "date": "2024-01-15",
+    "author": "Marat Martirosyan",
+    "tags": ["Angular", "Signals", "State Management"],
+    "category": "Angular",
+    "readTime": 8,
+    "featured": true
+  },
+  {
+    "slug": "typescript-best-practices-2024",
+    "title": "TypeScript Best Practices for 2024",
+    "description": "Essential TypeScript patterns and practices every developer should know to write better, more maintainable code.",
+    "date": "2024-01-10",
+    "author": "Marat Martirosyan",
+    "tags": ["TypeScript", "Best Practices", "Code Quality"],
+    "category": "TypeScript",
+    "readTime": 10,
+    "featured": true
+  },
+  {
+    "slug": "building-performant-angular-apps",
+    "title": "Building Performant Angular Applications",
+    "description": "Techniques and strategies for optimizing Angular applications for maximum performance and user experience.",
+    "date": "2024-01-05",
+    "author": "Marat Martirosyan",
+    "tags": ["Angular", "Performance", "Optimization"],
+    "category": "Angular",
+    "readTime": 12,
+    "featured": true
+  },
+  {
+    "slug": "modern-css-with-tailwind",
+    "title": "Modern CSS Architecture with Tailwind",
+    "description": "How to build scalable and maintainable CSS architectures using Tailwind CSS utility-first approach.",
+    "date": "2023-12-28",
+    "author": "Marat Martirosyan",
+    "tags": ["CSS", "Tailwind", "Web Design"],
+    "category": "Web Development",
+    "readTime": 7,
+    "featured": false
+  },
+  {
+    "slug": "angular-ssr-complete-guide",
+    "title": "Complete Guide to Angular SSR",
+    "description": "Master server-side rendering in Angular for improved SEO and initial page load performance.",
+    "date": "2023-12-20",
+    "author": "Marat Martirosyan",
+    "tags": ["Angular", "SSR", "SEO"],
+    "category": "Tutorial",
+    "readTime": 15,
+    "featured": false
+  },
+  {
+    "slug": "mastering-rxjs-operators",
+    "title": "Mastering RxJS Operators",
+    "description": "Deep dive into the most useful RxJS operators and how to use them effectively in Angular applications.",
+    "date": "2023-12-15",
+    "author": "Marat Martirosyan",
+    "tags": ["RxJS", "Angular", "Reactive Programming"],
+    "category": "Angular",
+    "readTime": 14,
+    "featured": false
+  },
+  {
+    "slug": "nestjs-microservices-architecture",
+    "title": "Building Microservices with NestJS",
+    "description": "Learn how to design and implement scalable microservices architecture using NestJS framework.",
+    "date": "2023-12-10",
+    "author": "Marat Martirosyan",
+    "tags": ["NestJS", "Microservices", "Backend"],
+    "category": "Backend",
+    "readTime": 18,
+    "featured": false
+  },
+  {
+    "slug": "testing-angular-applications",
+    "title": "Comprehensive Testing in Angular",
+    "description": "Best practices for unit testing, integration testing, and e2e testing in Angular applications.",
+    "date": "2023-12-05",
+    "author": "Marat Martirosyan",
+    "tags": ["Angular", "Testing", "Quality Assurance"],
+    "category": "Tutorial",
+    "readTime": 16,
+    "featured": false
+  },
+  {
+    "slug": "docker-for-developers",
+    "title": "Docker Best Practices for Developers",
+    "description": "Essential Docker commands, techniques, and best practices for containerizing your applications.",
+    "date": "2023-11-28",
+    "author": "Marat Martirosyan",
+    "tags": ["Docker", "DevOps", "Containers"],
+    "category": "DevOps",
+    "readTime": 11,
+    "featured": false
+  },
+  {
+    "slug": "web-accessibility-guide",
+    "title": "Complete Guide to Web Accessibility",
+    "description": "Make your web applications accessible to everyone with WCAG guidelines and practical implementation tips.",
+    "date": "2023-11-20",
+    "author": "Marat Martirosyan",
+    "tags": ["Accessibility", "A11y", "Web Development"],
+    "category": "Web Development",
+    "readTime": 13,
+    "featured": false
+  }
+]

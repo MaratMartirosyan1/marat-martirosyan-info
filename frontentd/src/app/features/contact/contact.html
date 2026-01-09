@@ -1,0 +1,103 @@
+<div class="min-h-screen py-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-16 animate-fade-in">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">
+          Get In <span class="text-gradient-angular">Touch</span>
+        </h1>
+        <p class="text-lg text-[var(--text-secondary)]">
+          Let's discuss your next project or just say hello
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="bg-[var(--bg-surface)] rounded-xl p-6 hover:shadow-lg transition-shadow">
+          <ng-icon name="lucideMail" class="w-8 h-8 text-angular-red mb-4" />
+          <h3 class="font-semibold mb-2">Email</h3>
+          <a href="mailto:marat@example.com" class="text-[var(--text-secondary)] hover:text-angular-red">
+            marat&#64;example.com
+          </a>
+        </div>
+
+        <div class="bg-[var(--bg-surface)] rounded-xl p-6 hover:shadow-lg transition-shadow">
+          <ng-icon name="lucideMapPin" class="w-8 h-8 text-angular-purple mb-4" />
+          <h3 class="font-semibold mb-2">Location</h3>
+          <p class="text-[var(--text-secondary)]">Remote / Worldwide</p>
+        </div>
+      </div>
+
+      <div class="bg-[var(--bg-surface)] rounded-2xl p-8 shadow-lg animate-slide-up">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+          <div class="mb-6">
+            <label class="block mb-2 font-semibold" for="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              class="w-full px-4 py-3 rounded-lg bg-[var(--bg-primary)] border-2 border-[var(--border-color)] focus:border-angular-red outline-none transition-colors"
+              placeholder="Your name"
+            />
+            @if (contactForm.get('name')?.invalid && contactForm.get('name')?.touched) {
+              <p class="text-red-500 text-sm mt-1">Name is required</p>
+            }
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 font-semibold" for="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="w-full px-4 py-3 rounded-lg bg-[var(--bg-primary)] border-2 border-[var(--border-color)] focus:border-angular-red outline-none transition-colors"
+              placeholder="your.email@example.com"
+            />
+            @if (contactForm.get('email')?.invalid && contactForm.get('email')?.touched) {
+              <p class="text-red-500 text-sm mt-1">Please enter a valid email</p>
+            }
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 font-semibold" for="message">Message</label>
+            <textarea
+              id="message"
+              formControlName="message"
+              rows="6"
+              class="w-full px-4 py-3 rounded-lg bg-[var(--bg-primary)] border-2 border-[var(--border-color)] focus:border-angular-red outline-none transition-colors resize-none"
+              placeholder="Tell me about your project..."
+            ></textarea>
+            @if (contactForm.get('message')?.invalid && contactForm.get('message')?.touched) {
+              <p class="text-red-500 text-sm mt-1">Message is required</p>
+            }
+          </div>
+
+          @if (submitStatus()) {
+            <div
+              [class.bg-green-500]="submitStatus() === 'success'"
+              [class.bg-red-500]="submitStatus() === 'error'"
+              class="mb-4 p-4 rounded-lg text-white"
+            >
+              @if (submitStatus() === 'success') {
+                Thank you! Your message has been sent successfully.
+              } @else {
+                There was an error sending your message. Please try again.
+              }
+            </div>
+          }
+
+          <button
+            type="submit"
+            [disabled]="contactForm.invalid || isSubmitting()"
+            class="w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-gradient-angular text-white font-semibold hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            @if (isSubmitting()) {
+              Sending...
+            } @else {
+              <ng-icon name="lucideSend" class="w-5 h-5" />
+              Send Message
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

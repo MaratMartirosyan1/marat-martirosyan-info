@@ -1,0 +1,110 @@
+<header
+  class="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--bg-primary)]/80 backdrop-blur-lg"
+>
+  <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a routerLink="/" class="text-xl font-bold text-gradient-angular">MM</a>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a
+          routerLink="/"
+          routerLinkActive="text-gradient-angular"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Home
+        </a>
+        <a
+          routerLink="/about"
+          routerLinkActive="text-gradient-angular"
+          class="text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          About
+        </a>
+        <a
+          routerLink="/projects"
+          routerLinkActive="text-gradient-angular"
+          class="text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Projects
+        </a>
+        <a
+          routerLink="/blog"
+          routerLinkActive="text-gradient-angular"
+          class="text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Blog
+        </a>
+        <a
+          routerLink="/contact"
+          routerLinkActive="text-gradient-angular"
+          class="text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Contact
+        </a>
+        <app-theme-toggle />
+      </div>
+
+      <div class="md:hidden flex items-center gap-4">
+        <app-theme-toggle />
+        <button
+          (click)="mobileMenuOpen.set(!mobileMenuOpen())"
+          class="text-[var(--text-primary)]"
+          [attr.aria-label]="mobileMenuOpen() ? 'Close menu' : 'Open menu'"
+        >
+          @if (!mobileMenuOpen()) {
+            <ng-icon name="lucideMenu" class="w-6 h-6" />
+          } @else {
+            <ng-icon name="lucideX" class="w-6 h-6" />
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (mobileMenuOpen()) {
+      <div class="md:hidden py-4 space-y-3 animate-fade-in">
+        <a
+          routerLink="/"
+          (click)="mobileMenuOpen.set(false)"
+          routerLinkActive="text-gradient-angular"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="block py-2 text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Home
+        </a>
+        <a
+          routerLink="/about"
+          (click)="mobileMenuOpen.set(false)"
+          routerLinkActive="text-gradient-angular"
+          class="block py-2 text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          About
+        </a>
+        <a
+          routerLink="/projects"
+          (click)="mobileMenuOpen.set(false)"
+          routerLinkActive="text-gradient-angular"
+          class="block py-2 text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Projects
+        </a>
+        <a
+          routerLink="/blog"
+          (click)="mobileMenuOpen.set(false)"
+          routerLinkActive="text-gradient-angular"
+          class="block py-2 text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Blog
+        </a>
+        <a
+          routerLink="/contact"
+          (click)="mobileMenuOpen.set(false)"
+          routerLinkActive="text-gradient-angular"
+          class="block py-2 text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+        >
+          Contact
+        </a>
+      </div>
+    }
+  </nav>
+</header>
