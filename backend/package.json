@@ -5,7 +5,7 @@
   "scripts": {
     "backend:dev": "nest start",
     "backend:watch": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start": "node dist/main",
     "build": "nest build"
   },
   "dependencies": {
