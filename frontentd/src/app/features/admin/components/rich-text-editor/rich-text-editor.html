@@ -1,0 +1,10 @@
+<div class="rich-text-editor">
+  <quill-editor
+    #editor
+    [modules]="quillModules"
+    [styles]="{ height: '400px' }"
+    (onContentChanged)="onContentChange($event)"
+    [placeholder]="'Write your post content here...'"
+    theme="snow"
+  ></quill-editor>
+</div>

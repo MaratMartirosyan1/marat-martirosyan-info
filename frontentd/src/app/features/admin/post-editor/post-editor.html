@@ -1,0 +1,152 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-6 flex justify-between items-center">
+      <a routerLink="/admin/posts" class="text-sm text-gray-600 dark:text-gray-400 hover:text-angular-red">
+        ← Back to Posts
+      </a>
+      <div class="flex gap-3">
+        <button
+          (click)="onSubmit('draft')"
+          [disabled]="isSaving()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors"
+        >
+          Save Draft
+        </button>
+        <button
+          (click)="onSubmit('published')"
+          [disabled]="isSaving()"
+          class="px-4 py-2 text-sm font-medium text-white bg-gradient-angular rounded-md hover:opacity-90 disabled:opacity-50 transition-opacity"
+        >
+          {{ isEditMode() ? 'Update & Publish' : 'Publish' }}
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="postForm" class="space-y-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Cover Image
+          </label>
+          <app-image-uploader
+            [initialImageUrl]="postForm.get('image')?.value || ''"
+            (imageUrlChange)="onImageChange($event)"
+          ></app-image-uploader>
+        </div>
+
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Title *
+          </label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="Enter post title"
+            class="w-full px-4 py-3 text-2xl font-bold border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-angular-red focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+          />
+          @if (postForm.get('title')?.invalid && postForm.get('title')?.touched) {
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Title is required</p>
+          }
+        </div>
+
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Description *
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="3"
+            placeholder="Brief description of your post"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-angular-red focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+          ></textarea>
+          @if (postForm.get('description')?.invalid && postForm.get('description')?.touched) {
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Description is required</p>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Category *
+            </label>
+            <input
+              id="category"
+              type="text"
+              formControlName="category"
+              placeholder="e.g., Angular, TypeScript"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-angular-red focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+            />
+            @if (postForm.get('category')?.invalid && postForm.get('category')?.touched) {
+              <p class="mt-1 text-sm text-red-600 dark:text-red-400">Category is required</p>
+            }
+          </div>
+
+          <div>
+            <label for="tags" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Tags (comma-separated) *
+            </label>
+            <input
+              id="tags"
+              type="text"
+              formControlName="tagsString"
+              placeholder="e.g., angular, web development, tutorial"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-angular-red focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+            />
+            @if (postForm.get('tagsString')?.invalid && postForm.get('tagsString')?.touched) {
+              <p class="mt-1 text-sm text-red-600 dark:text-red-400">At least one tag is required</p>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="author" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Author *
+          </label>
+          <input
+            id="author"
+            type="text"
+            formControlName="author"
+            placeholder="Author name"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-angular-red focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+          />
+          @if (postForm.get('author')?.invalid && postForm.get('author')?.touched) {
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Author is required</p>
+          }
+        </div>
+
+        <div class="flex items-center">
+          <input
+            id="featured"
+            type="checkbox"
+            formControlName="featured"
+            class="h-4 w-4 text-angular-red focus:ring-angular-red border-gray-300 dark:border-gray-700 rounded"
+          />
+          <label for="featured" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+            Featured Post
+          </label>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Content *
+          </label>
+          <app-rich-text-editor
+            [content]="postForm.get('content')?.value || ''"
+            (contentChange)="onContentChange($event)"
+          ></app-rich-text-editor>
+          @if (postForm.get('content')?.invalid && postForm.get('content')?.touched) {
+            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Content is required</p>
+          }
+        </div>
+      </div>
+    </form>
+
+    @if (errorMessage()) {
+      <div class="mt-4 rounded-md bg-red-50 dark:bg-red-900/30 p-4">
+        <p class="text-sm text-red-800 dark:text-red-200">{{ errorMessage() }}</p>
+      </div>
+    }
+  </div>
+</div>

@@ -1,27 +1,24 @@
-import { Controller, Get, Query, Param, NotFoundException } from '@nestjs/common';
-import { BlogService } from './blog.service';
+import { Controller, Get, Query, Param } from '@nestjs/common';
+import { PostService } from './post.service';
 import { QueryPostsDto } from './dto/query-posts.dto';
 
 @Controller('blog')
 export class BlogController {
-  constructor(private readonly blogService: BlogService) {}
+  constructor(private readonly postService: PostService) {}
 
   @Get('posts')
-  getAllPosts(@Query() query: QueryPostsDto) {
-    return this.blogService.getAllPosts(query);
+  getPublishedPosts(@Query() query: QueryPostsDto) {
+    const { page = 1, pageSize = 10, search, category } = query;
+    return this.postService.getPublished(page, pageSize, search, category);
   }
 
   @Get('featured')
   getFeaturedPosts(@Query('limit') limit?: number) {
-    return this.blogService.getFeaturedPosts(limit);
+    return this.postService.getFeatured(limit || 3);
   }
 
   @Get('posts/:slug')
   getPostBySlug(@Param('slug') slug: string) {
-    const post = this.blogService.getPostBySlug(slug);
-    if (!post) {
-      throw new NotFoundException(`Post with slug "${slug}" not found`);
-    }
-    return post;
+    return this.postService.getBySlug(slug, 'published');
   }
 }
