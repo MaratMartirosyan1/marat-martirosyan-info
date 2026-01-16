@@ -398,7 +398,7 @@ Add a complete blog management system with an admin panel similar to Medium/dev.
 ### **Feature Requirements**
 - **Admin Authentication**: Simple password protection with JWT tokens
 - **Rich Text Editor**: WYSIWYG editor (Quill/TinyMCE) for content creation
-- **Image Uploads**: Cloud storage integration (Cloudinary/AWS S3)
+- **Image Uploads**: Cloud storage integration (AWS S3)
 - **Full CRUD**: Create, Read, Update, Delete operations for blog posts
 - **Draft/Publish Workflow**: Save posts as drafts before publishing
 - **Protected Routes**: Admin pages only accessible with valid authentication
@@ -601,7 +601,7 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {}
 #### **Install Dependencies**
 ```bash
 npm install @nestjs/platform-express multer
-npm install cloudinary
+npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 npm install @types/multer --save-dev
 ```
 
@@ -611,12 +611,11 @@ backend/src/
 ├── upload/
 │   ├── upload.module.ts
 │   ├── upload.controller.ts
-│   ├── upload.service.ts
-│   └── cloudinary.provider.ts
+│   └── upload.service.ts
 ```
 
 #### **Features**
-- **POST /upload/image**: Upload image to Cloudinary/S3, return URL
+- **POST /upload/image**: Upload image to AWS S3, return URL
 - **File Validation**: Check file type, size limits
 - **Image Optimization**: Automatic resizing and format conversion
 - **Protected Route**: Requires JWT authentication
@@ -636,10 +635,11 @@ DATABASE_NAME=portfolio_db
 JWT_SECRET=your_super_secret_jwt_key_change_this
 JWT_EXPIRATION=7d
 
-# Cloudinary (or AWS S3)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+# AWS S3
+AWS_REGION=your_aws_region
+AWS_ACCESS_KEY_ID=your_access_key_id
+AWS_SECRET_ACCESS_KEY=your_secret_access_key
+AWS_S3_BUCKET=your_bucket_name
 
 # Admin (for initial setup)
 ADMIN_EMAIL=admin@example.com
@@ -884,7 +884,7 @@ export class RichTextEditorComponent {
 - Progress indicator during upload
 - Support for multiple formats (JPEG, PNG, WebP)
 - File size validation (max 5MB)
-- Returns Cloudinary URL
+- Returns S3 URL
 
 ### **10. Post List Component (Admin Dashboard)**
 
@@ -1086,28 +1086,30 @@ This will create an admin user with credentials from `.env`:
 
 ---
 
-## **Cloudinary Setup (For Image Uploads)**
+## **AWS S3 Setup (For Image Uploads)**
 
-### **Step 1: Create Cloudinary Account**
-1. Go to https://cloudinary.com/
-2. Sign up for a free account
-3. Verify your email
+### **Step 1: Create AWS Account & S3 Bucket**
+1. Go to https://aws.amazon.com/
+2. Sign up or log into your AWS account
+3. Navigate to S3 in the AWS Console
+4. Create a new bucket with appropriate settings
+5. Configure bucket permissions and CORS policy
 
-### **Step 2: Get API Credentials**
-1. Log into Cloudinary Dashboard
-2. Find your credentials in the "Dashboard" section:
-   - Cloud Name
-   - API Key
-   - API Secret
+### **Step 2: Create IAM User for API Access**
+1. Navigate to IAM in the AWS Console
+2. Create a new IAM user with programmatic access
+3. Attach `AmazonS3FullAccess` policy (or a more restrictive custom policy)
+4. Save the Access Key ID and Secret Access Key
 
 ### **Step 3: Update Environment Variables**
 
 Update `backend/.env`:
 ```env
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_actual_cloud_name
-CLOUDINARY_API_KEY=your_actual_api_key
-CLOUDINARY_API_SECRET=your_actual_api_secret
+# AWS S3
+AWS_REGION=your_aws_region
+AWS_ACCESS_KEY_ID=your_actual_access_key_id
+AWS_SECRET_ACCESS_KEY=your_actual_secret_access_key
+AWS_S3_BUCKET=your_actual_bucket_name
 ```
 
 ---
@@ -1121,7 +1123,7 @@ CLOUDINARY_API_SECRET=your_actual_api_secret
 2. ⬜ Create `portfolio_db` database
 3. ⬜ Configure `.env` with correct database credentials
 4. ⬜ Verify database connection (start backend without errors)
-5. ⬜ Set up Cloudinary account and configure credentials
+5. ⬜ Set up AWS S3 bucket and configure credentials
 
 #### **Backend Tasks**
 6. ✅ Install and configure TypeORM
@@ -1130,7 +1132,7 @@ CLOUDINARY_API_SECRET=your_actual_api_secret
 9. ✅ Implement admin login endpoint
 10. ✅ Create JWT guard for protected routes
 11. ✅ Implement admin blog CRUD endpoints
-12. ✅ Set up Cloudinary integration
+12. ✅ Set up AWS S3 integration
 13. ✅ Create image upload endpoint
 14. ✅ Update public blog endpoints to filter published posts
 15. ⬜ Create database seeding script for admin user
@@ -1181,7 +1183,7 @@ CLOUDINARY_API_SECRET=your_actual_api_secret
 - ✅ Implement CSRF protection
 
 ### **Frontend**
-- ✅ Store JWT in httpOnly cookie (preferred) or localStorage
+- ✅ Store JWT in localStorage
 - ✅ Sanitize HTML content before rendering
 - ✅ Implement route guards for admin pages
 - ✅ Clear sensitive data on logout
@@ -1197,7 +1199,7 @@ CLOUDINARY_API_SECRET=your_actual_api_secret
 - **Database**: PostgreSQL 15+
 - **ORM**: TypeORM
 - **Auth**: JWT with Passport.js
-- **Image Storage**: Cloudinary or AWS S3
+- **Image Storage**: AWS S3
 - **Hashing**: bcrypt
 
 ### **Frontend**
@@ -1309,10 +1311,10 @@ async function migratePosts() {
 - [ ] Update `backend/.env` with correct PostgreSQL password
 - [ ] Start backend and verify database connection works
 
-#### **Step 2: Cloudinary Setup**
-- [ ] Create Cloudinary account
-- [ ] Get API credentials from dashboard
-- [ ] Update `backend/.env` with Cloudinary credentials
+#### **Step 2: AWS S3 Setup**
+- [ ] Create AWS S3 bucket with appropriate settings
+- [ ] Create IAM user with S3 access
+- [ ] Update `backend/.env` with AWS credentials
 
 #### **Step 3: Admin User Seeding**
 - [ ] Create database seeding script
@@ -1336,3 +1338,553 @@ async function migratePosts() {
 - Add post analytics
 - Implement comments system
 - Add SEO preview in editor
+
+---
+
+## **Phase 7: Enhanced Admin Panel & Project Management**
+
+### **Overview**
+Enhance the admin experience with a proper layout architecture, unified content management for both Posts and Projects, and improved header authentication UI.
+
+### **Key Features**
+1. ~~**Header Enhancement**: "My Account" dropdown visible when authenticated~~ ✅ DONE
+2. **Route-Based Layouts**: Auth layout for login, Main layout for everything else
+3. **Admin Content with Sidebar**: Sidebar inside content area for admin pages
+4. **Unified Content Management**: Posts and Projects with same workflow
+5. **Card-Based List Views**: Visual cards with actions (edit, duplicate, delete, archive, open, publish)
+6. **Status Workflow**: Draft → Published → Archived for both Posts and Projects
+
+---
+
+### **1. Header Authentication UI** ✅ COMPLETED
+
+- Added "My Account" dropdown (visible only when `isAuthenticated()` is true)
+- Dropdown contents: Dashboard link → `/admin`, Logout button
+- Mobile: Added "My Account" section to mobile menu
+- Logo always links to home page (/)
+- Theme toggle works everywhere
+
+---
+
+### **2. Layout Architecture**
+
+#### **Current Problem**
+- `app.html` renders `<app-main-layout />` which wraps ALL routes
+- Login page incorrectly shows site header/footer
+
+#### **Solution: Route-Based Layouts**
+
+##### **Login Page (Auth Layout)**
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                    ┌─────────────────┐                      │
+│                    │      LOGO       │                      │
+│                    │       MM        │                      │
+│                    ├─────────────────┤                      │
+│                    │  Email input    │                      │
+│                    │  Password input │                      │
+│                    │  [Login Button] │                      │
+│                    └─────────────────┘                      │
+│                                                             │
+│                              [Theme toggle in corner]       │
+└─────────────────────────────────────────────────────────────┘
+```
+- No header/footer
+- Centered login card with logo
+- Theme toggle in corner
+- Redirects to `/admin/posts` on success
+
+##### **Admin Pages (Main Layout + Sidebar Content)**
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Header (Logo→/, nav links, theme toggle, My Account ▼)     │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────┬──────────────────────────────────────────┐    │
+│  │ Sidebar  │                                          │    │
+│  │          │                                          │    │
+│  │ [Posts]  │         Content Area                     │    │
+│  │ [Proj.]  │         (cards, editor, etc.)            │    │
+│  │          │                                          │    │
+│  └──────────┴──────────────────────────────────────────┘    │
+├─────────────────────────────────────────────────────────────┤
+│  Footer                                                     │
+└─────────────────────────────────────────────────────────────┘
+```
+- Uses Main Layout (header + footer)
+- Sidebar is INSIDE the content area
+- Sidebar has Posts and Projects links
+- Content shows cards/editors
+
+#### **File Changes**
+```
+frontentd/src/app/
+├── app.html                              # Change to just <router-outlet />
+├── app.ts                                # Remove MainLayoutComponent import
+├── app.routes.ts                         # Restructure with layout parents
+└── layouts/
+    ├── main-layout/
+    │   └── main-layout.ts                # Existing (for public + admin pages)
+    └── auth-layout/
+        └── auth-layout.ts                # NEW (for login page only)
+
+frontentd/src/app/features/admin/
+├── components/
+│   └── admin-sidebar/
+│       └── admin-sidebar.ts              # NEW (sidebar component)
+└── layouts/
+    └── admin-content/
+        └── admin-content.ts              # NEW (sidebar + router-outlet wrapper)
+```
+
+---
+
+### **3. Updated Route Structure**
+
+```typescript
+// app.routes.ts
+export const routes: Routes = [
+  // Login page - Auth Layout (no header/footer)
+  {
+    path: 'admin/login',
+    loadComponent: () => import('./layouts/auth-layout/auth-layout')
+      .then(m => m.AuthLayout),
+    children: [
+      { path: '', loadComponent: () => import('./features/admin/login/login').then(m => m.Login) }
+    ]
+  },
+
+  // All other pages - Main Layout (header + footer)
+  {
+    path: '',
+    loadComponent: () => import('./layouts/main-layout/main-layout')
+      .then(m => m.MainLayout),
+    children: [
+      // Public pages
+      { path: '', loadComponent: () => import('./features/home/home').then(m => m.Home) },
+      { path: 'about', loadComponent: () => import('./features/about/about').then(m => m.About) },
+      { path: 'projects', loadComponent: () => import('./features/projects/projects').then(m => m.Projects) },
+      { path: 'blog', loadComponent: () => import('./features/blog/blog-list/blog-list').then(m => m.BlogList) },
+      { path: 'blog/:slug', loadComponent: () => import('./features/blog/blog-detail/blog-detail').then(m => m.BlogDetail) },
+      { path: 'contact', loadComponent: () => import('./features/contact/contact').then(m => m.Contact) },
+
+      // Admin pages (with sidebar inside content)
+      {
+        path: 'admin',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/admin/layouts/admin-content/admin-content')
+          .then(m => m.AdminContent),
+        children: [
+          { path: '', redirectTo: 'posts', pathMatch: 'full' },
+          { path: 'posts', loadComponent: () => import('./features/admin/post-list/post-list').then(m => m.PostList) },
+          { path: 'posts/new', loadComponent: () => import('./features/admin/post-editor/post-editor').then(m => m.PostEditor) },
+          { path: 'posts/edit/:id', loadComponent: () => import('./features/admin/post-editor/post-editor').then(m => m.PostEditor) },
+          { path: 'projects', loadComponent: () => import('./features/admin/project-list/project-list').then(m => m.ProjectList) },
+          { path: 'projects/new', loadComponent: () => import('./features/admin/project-editor/project-editor').then(m => m.ProjectEditor) },
+          { path: 'projects/edit/:id', loadComponent: () => import('./features/admin/project-editor/project-editor').then(m => m.ProjectEditor) },
+        ]
+      }
+    ]
+  },
+
+  { path: '**', redirectTo: '' }
+];
+```
+
+---
+
+### **4. Content Card Component**
+
+#### **Design**
+```
+┌─────────────────────────────────────────────────────────┐
+│  ┌──────────┐                                           │
+│  │          │  Title                        [Published] │
+│  │  Image   │  Description excerpt...                   │
+│  │          │  Category • 5 min read                    │
+│  └──────────┘                                           │
+├─────────────────────────────────────────────────────────┤
+│  [Edit] [Duplicate] [Open] │ [Archive] [Delete] [Pub.] │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### **Card Actions**
+| Action | Description | Availability |
+|--------|-------------|--------------|
+| **Edit** | Navigate to editor | All statuses |
+| **Duplicate** | Create copy with "Copy of [title]" | All statuses |
+| **Open** | Open public page in new tab | Published only |
+| **Archive** | Move to archived status | Draft, Published |
+| **Delete** | Permanent deletion (with confirmation) | All statuses |
+| **Publish** | Change status to published | Draft only |
+| **Unpublish** | Change status to draft | Published only |
+| **Restore** | Change status to draft | Archived only |
+
+#### **Status Badges**
+- **Draft**: Yellow/amber badge
+- **Published**: Green badge
+- **Archived**: Gray badge
+
+---
+
+### **5. Posts Management (Enhanced)**
+
+#### **Current State**
+- Post model has `status: 'draft' | 'published'`
+- PostList exists but needs card view and filters
+
+#### **Changes Required**
+
+##### **Update Post Model**
+```typescript
+// post.model.ts
+export type PostStatus = 'draft' | 'published' | 'archived';
+
+export interface Post {
+  // ... existing fields
+  status?: PostStatus;  // Update type
+}
+```
+
+##### **Backend Changes**
+```typescript
+// Update PostEntity status enum
+@Column({
+  type: 'enum',
+  enum: ['draft', 'published', 'archived'],
+  default: 'draft'
+})
+status: string;
+
+// Add new endpoints
+@Patch('posts/:id/archive')
+archivePost(@Param('id') id: string) { /* ... */ }
+
+@Patch('posts/:id/restore')
+restorePost(@Param('id') id: string) { /* ... */ }
+
+@Post('posts/:id/duplicate')
+duplicatePost(@Param('id') id: string) { /* ... */ }
+```
+
+##### **PostList Component Updates**
+- Replace table with card grid
+- Add status filter tabs: All | Draft | Published | Archived
+- Add search input
+- Add "New Post" button
+- Implement card actions
+
+---
+
+### **6. Projects Management (New)**
+
+#### **Backend Changes**
+
+##### **New Project Entity**
+```typescript
+// backend/src/projects/entities/project.entity.ts
+@Entity('projects')
+export class ProjectEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  slug: string;
+
+  @Column()
+  title: string;
+
+  @Column('text')
+  description: string;
+
+  @Column('text')
+  content: string;  // Rich text description
+
+  @Column()
+  image: string;
+
+  @Column('simple-array')
+  technologies: string[];
+
+  @Column()
+  category: string;
+
+  @Column({ nullable: true })
+  demoUrl: string;
+
+  @Column({ nullable: true })
+  githubUrl: string;
+
+  @Column({ default: false })
+  featured: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: ['draft', 'published', 'archived'],
+    default: 'draft'
+  })
+  status: string;
+
+  @Column({ default: 0 })
+  sortOrder: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+```
+
+##### **New Admin Project Endpoints**
+```typescript
+// backend/src/projects/admin-projects.controller.ts
+@Controller('admin/projects')
+@UseGuards(JwtAuthGuard)
+export class AdminProjectsController {
+  @Get()
+  getAllProjects(@Query() query: QueryProjectsDto) { /* include all statuses */ }
+
+  @Post()
+  createProject(@Body() dto: CreateProjectDto) { /* ... */ }
+
+  @Put(':id')
+  updateProject(@Param('id') id: string, @Body() dto: UpdateProjectDto) { /* ... */ }
+
+  @Delete(':id')
+  deleteProject(@Param('id') id: string) { /* ... */ }
+
+  @Patch(':id/publish')
+  publishProject(@Param('id') id: string) { /* ... */ }
+
+  @Patch(':id/unpublish')
+  unpublishProject(@Param('id') id: string) { /* ... */ }
+
+  @Patch(':id/archive')
+  archiveProject(@Param('id') id: string) { /* ... */ }
+
+  @Patch(':id/restore')
+  restoreProject(@Param('id') id: string) { /* ... */ }
+
+  @Post(':id/duplicate')
+  duplicateProject(@Param('id') id: string) { /* ... */ }
+}
+```
+
+##### **Update Public Projects Endpoint**
+```typescript
+// Only return published projects
+@Get()
+getAllProjects() {
+  return this.projectsService.getPublishedProjects();
+}
+```
+
+#### **Frontend Changes**
+
+##### **New Files**
+```
+frontentd/src/app/features/admin/
+├── services/
+│   └── admin-project.service.ts
+├── project-list/
+│   ├── project-list.ts
+│   └── project-list.html
+└── project-editor/
+    ├── project-editor.ts
+    └── project-editor.html
+```
+
+##### **Update Project Model**
+```typescript
+// project.model.ts
+export type ProjectStatus = 'draft' | 'published' | 'archived';
+
+export interface Project {
+  id: string;
+  slug?: string;
+  title: string;
+  description: string;
+  content?: string;  // Rich text
+  image: string;
+  technologies: string[];
+  category: string;
+  demoUrl?: string;
+  githubUrl?: string;
+  featured?: boolean;
+  status?: ProjectStatus;
+  sortOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateProjectDto {
+  title: string;
+  description: string;
+  content?: string;
+  image?: string;
+  technologies: string[];
+  category: string;
+  demoUrl?: string;
+  githubUrl?: string;
+  featured: boolean;
+  status: ProjectStatus;
+}
+```
+
+---
+
+### **7. Implementation Tasks**
+
+#### **Phase 7.1: Header Enhancement** ✅ COMPLETED
+- [x] Update Header component to inject AuthService
+- [x] Add "My Account" dropdown UI (desktop)
+- [x] Add "My Account" to mobile menu
+- [x] Style dropdown with Angular gradient theme
+- [x] Click-outside to close dropdown
+
+#### **Phase 7.2: Layout Architecture**
+- [ ] Update app.html to use `<router-outlet />` only
+- [ ] Update app.ts to remove MainLayoutComponent import
+- [ ] Rename MainLayoutComponent to MainLayout (follow naming convention)
+- [ ] Create AuthLayout component (for login page)
+- [ ] Create AdminContent component (sidebar + router-outlet)
+- [ ] Create AdminSidebar component
+- [ ] Update app.routes.ts with new route structure
+- [ ] Update login redirect to `/admin/posts`
+- [ ] Implement sidebar collapse for mobile
+- [ ] Add active state highlighting on sidebar
+
+#### **Phase 7.3: Content Card Component**
+- [ ] Create reusable ContentCard component
+- [ ] Implement all card actions
+- [ ] Add status badges styling
+- [ ] Add confirmation dialog for delete action
+- [ ] Implement action handlers
+
+#### **Phase 7.4: Backend - Posts Enhancement**
+- [ ] Add 'archived' to Post entity status enum
+- [ ] Create archive/restore/duplicate endpoints
+- [ ] Update getAllPosts to support status filter
+- [ ] Test all new endpoints
+
+#### **Phase 7.5: Frontend - Posts Enhancement**
+- [ ] Update Post model with 'archived' status
+- [ ] Update admin-post.service with new methods
+- [ ] Refactor PostList to use card grid
+- [ ] Add status filter tabs
+- [ ] Implement all card actions
+- [ ] Add loading and error states
+
+#### **Phase 7.6: Backend - Projects CRUD**
+- [ ] Create ProjectEntity with status workflow
+- [ ] Create AdminProjectsController
+- [ ] Implement all CRUD + status endpoints
+- [ ] Update public ProjectsController to filter by status
+- [ ] Create DTOs for create/update
+- [ ] Test all endpoints
+
+#### **Phase 7.7: Frontend - Projects Management**
+- [ ] Update Project model with status
+- [ ] Create admin-project.service
+- [ ] Create ProjectList component (card grid with filters)
+- [ ] Create ProjectEditor component
+- [ ] Implement all card actions
+- [ ] Test complete flow
+
+#### **Phase 7.8: Testing & Polish**
+- [ ] Test complete admin flow
+- [ ] Verify public pages only show published content
+- [ ] Test mobile responsiveness
+- [ ] Add loading states and skeletons
+- [ ] Add success/error toast notifications
+- [ ] Security audit for new endpoints
+
+---
+
+### **8. File Structure Summary**
+
+```
+frontentd/src/app/
+├── app.html                              # Just <router-outlet />
+├── app.ts                                # Minimal, no layout import
+├── app.routes.ts                         # Route-based layout selection
+└── layouts/
+    ├── main-layout/
+    │   └── main-layout.ts                # Existing, renamed from MainLayoutComponent
+    └── auth-layout/
+        └── auth-layout.ts                # NEW (login page only)
+
+frontentd/src/app/features/admin/
+├── layouts/
+│   └── admin-content/
+│       └── admin-content.ts              # NEW (sidebar + router-outlet)
+├── components/
+│   ├── admin-sidebar/
+│   │   └── admin-sidebar.ts              # NEW
+│   └── content-card/
+│       └── content-card.ts               # NEW
+├── services/
+│   ├── auth.service.ts                   (existing)
+│   ├── admin-post.service.ts             (existing, update)
+│   └── admin-project.service.ts          (new)
+├── guards/
+│   └── auth.guard.ts                     (existing)
+├── login/
+│   └── login.ts                          (existing, update redirect)
+├── post-list/
+│   └── post-list.ts                      (refactor to cards)
+├── post-editor/
+│   └── post-editor.ts                    (existing)
+├── project-list/
+│   └── project-list.ts                   (new)
+└── project-editor/
+    └── project-editor.ts        (new)
+
+backend/src/
+├── projects/
+│   ├── entities/
+│   │   └── project.entity.ts    (new)
+│   ├── dto/
+│   │   ├── create-project.dto.ts (new)
+│   │   └── update-project.dto.ts (new)
+│   ├── admin-projects.controller.ts (new)
+│   ├── projects.controller.ts   (update)
+│   ├── projects.service.ts      (update)
+│   └── projects.module.ts       (update)
+└── blog/
+    ├── entities/
+    │   └── post.entity.ts       (update status enum)
+    └── admin-blog.controller.ts (add new endpoints)
+```
+
+---
+
+### **9. UI/UX Considerations**
+
+#### **Admin Theme**
+- Use same Angular gradient colors as main site
+- Dark mode support
+- Clean, professional interface
+- Consistent spacing and typography
+
+#### **Responsive Design**
+- Sidebar collapses to hamburger on mobile
+- Cards stack vertically on mobile
+- Touch-friendly action buttons
+
+#### **Feedback & States**
+- Loading skeletons while fetching
+- Toast notifications for actions
+- Confirmation dialogs for destructive actions
+- Empty states with helpful CTAs
+
+---
+
+### **10. Security Considerations**
+
+- All admin endpoints protected with JWT guard
+- Input validation on all DTOs
+- Sanitize rich text content
+- Rate limiting on status change endpoints
+- Audit log for admin actions (optional future enhancement)

@@ -398,7 +398,6 @@ Railway offers free tier for both frontend and backend:
 **Solution**:
 - Verify CORS_ORIGIN in backend includes exact Vercel URL
 - Check for trailing slashes
-- Ensure credentials: true if using cookies
 
 #### Issue: 404 errors on refresh in Angular
 **Solution**:
