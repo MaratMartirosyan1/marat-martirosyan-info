@@ -1,9 +1,26 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { UploadApiResponse, UploadApiErrorResponse, v2 as cloudinary } from 'cloudinary';
-import * as streamifier from 'streamifier';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UploadService {
+  private readonly s3Client: S3Client;
+  private readonly bucket: string;
+  private readonly region: string;
+
+  constructor() {
+    this.region = process.env.AWS_REGION || 'eu-central-1';
+    this.bucket = process.env.AWS_S3_BUCKET || '';
+
+    this.s3Client = new S3Client({
+      region: this.region,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+      },
+    });
+  }
+
   async uploadImage(file: Express.Multer.File): Promise<string> {
     if (!file) {
       throw new BadRequestException('File is required');
@@ -19,25 +36,38 @@ export class UploadService {
       throw new BadRequestException('File size must be less than 5MB');
     }
 
-    return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'portfolio/blog',
-          transformation: [
-            { width: 1200, height: 630, crop: 'limit' },
-            { quality: 'auto', fetch_format: 'auto' }
-          ]
-        },
-        (error: UploadApiErrorResponse, result: UploadApiResponse) => {
-          if (error) {
-            reject(new BadRequestException('Failed to upload image'));
-          } else {
-            resolve(result.secure_url);
-          }
-        }
-      );
+    const extension = file.originalname.split('.').pop();
+    const key = `portfolio/blog/${randomUUID()}.${extension}`;
 
-      streamifier.createReadStream(file.buffer).pipe(uploadStream);
-    });
+    await this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      }),
+    );
+
+    return `https://${this.bucket}.s3.${this.region}.amazonaws.com/${key}`;
+  }
+
+  async deleteImage(imageUrl: string): Promise<void> {
+    const key = this.extractKeyFromUrl(imageUrl);
+    if (!key) {
+      throw new BadRequestException('Invalid image URL');
+    }
+
+    await this.s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      }),
+    );
+  }
+
+  private extractKeyFromUrl(url: string): string | null {
+    const pattern = new RegExp(`https://${this.bucket}\\.s3\\.${this.region}\\.amazonaws\\.com/(.+)`);
+    const match = url.match(pattern);
+    return match ? match[1] : null;
   }
 }
