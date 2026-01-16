@@ -1,0 +1,64 @@
+<div class="w-full max-w-md px-4">
+  <div class="bg-[var(--bg-secondary)] rounded-2xl shadow-xl border border-[var(--border-color)] p-8">
+    <div class="text-center mb-8">
+      <div class="text-4xl font-bold text-gradient-angular mb-2">MM</div>
+      <h2 class="text-2xl font-bold text-[var(--text-primary)]">
+        Admin Login
+      </h2>
+      <p class="mt-2 text-sm text-[var(--text-secondary)]">
+        Sign in to manage your content
+      </p>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      @if (errorMessage()) {
+        <div class="rounded-lg bg-red-500/10 border border-red-500/20 p-4">
+          <p class="text-sm text-red-500">{{ errorMessage() }}</p>
+        </div>
+      }
+      <div class="space-y-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            Email address
+          </label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-angular-red focus:border-transparent transition-all"
+            placeholder="admin@example.com"
+          />
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <p class="mt-1 text-sm text-red-500">Valid email is required</p>
+          }
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-[var(--text-primary)] mb-1">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-angular-red focus:border-transparent transition-all"
+            placeholder="Password"
+          />
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <p class="mt-1 text-sm text-red-500">Password is required</p>
+          }
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || isLoading()"
+        class="w-full py-3 px-4 rounded-lg text-white font-medium bg-gradient-angular hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-angular-red disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+      >
+        @if (isLoading()) {
+          <span>Signing in...</span>
+        } @else {
+          <span>Sign in</span>
+        }
+      </button>
+    </form>
+  </div>
+</div>

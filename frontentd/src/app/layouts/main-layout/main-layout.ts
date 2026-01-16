@@ -17,4 +17,4 @@ import { Footer } from '../../shared/components/footer/footer';
     </div>
   `,
 })
-export class MainLayoutComponent {}
+export class MainLayout {}

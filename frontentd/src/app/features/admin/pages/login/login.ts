@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +31,6 @@ export class Login {
 
     this.authService.login(email, password).subscribe({
       next: () => {
-        console.log('asdf')
         this.router.navigate(['/admin/posts']);
       },
       error: (error) => {

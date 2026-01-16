@@ -43,6 +43,52 @@
           Contact
         </a>
         <app-theme-toggle />
+
+        @if (isAuthenticated()) {
+          <div class="relative">
+            <button
+              (click)="toggleAccountDropdown()"
+              class="flex items-center gap-2 px-3 py-2 rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all"
+            >
+              <ng-icon name="lucideUser" class="w-5 h-5" />
+              <span>My Account</span>
+              <ng-icon
+                name="lucideChevronDown"
+                class="w-4 h-4 transition-transform"
+                [class.rotate-180]="accountDropdownOpen()"
+              />
+            </button>
+
+            @if (accountDropdownOpen()) {
+              <div
+                (click)="closeAccountDropdown()"
+                class="fixed inset-0 z-40"
+              ></div>
+              <div
+                class="absolute right-0 mt-2 w-48 rounded-lg border border-[var(--border-color)] bg-[var(--bg-primary)] shadow-lg animate-fade-in z-50"
+              >
+                <div class="py-1">
+                  <a
+                    routerLink="/admin"
+                    (click)="closeAccountDropdown()"
+                    class="flex items-center gap-3 px-4 py-2.5 text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-all"
+                  >
+                    <ng-icon name="lucideLayoutDashboard" class="w-4 h-4" />
+                    <span>Dashboard</span>
+                  </a>
+                  <div class="border-t border-[var(--border-color)] my-1"></div>
+                  <button
+                    (click)="logout()"
+                    class="flex items-center gap-3 w-full px-4 py-2.5 text-red-500 hover:bg-[var(--bg-secondary)] transition-all"
+                  >
+                    <ng-icon name="lucideLogOut" class="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
       </div>
 
       <div class="md:hidden flex items-center gap-4">
@@ -104,6 +150,27 @@
         >
           Contact
         </a>
+
+        @if (isAuthenticated()) {
+          <div class="border-t border-[var(--border-color)] pt-3 mt-3">
+            <p class="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-2">Account</p>
+            <a
+              routerLink="/admin"
+              (click)="mobileMenuOpen.set(false)"
+              class="flex items-center gap-3 py-2 text-[var(--text-primary)] hover:text-gradient-angular transition-all"
+            >
+              <ng-icon name="lucideLayoutDashboard" class="w-5 h-5" />
+              <span>Dashboard</span>
+            </a>
+            <button
+              (click)="logout(); mobileMenuOpen.set(false)"
+              class="flex items-center gap-3 py-2 text-red-500 hover:text-red-400 transition-all w-full"
+            >
+              <ng-icon name="lucideLogOut" class="w-5 h-5" />
+              <span>Logout</span>
+            </button>
+          </div>
+        }
       </div>
     }
   </nav>

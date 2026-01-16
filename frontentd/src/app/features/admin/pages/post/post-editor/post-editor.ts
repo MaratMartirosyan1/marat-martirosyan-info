@@ -1,10 +1,10 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { AdminPostService } from '../services/admin-post.service';
-import { RichTextEditor } from '../components/rich-text-editor/rich-text-editor';
-import { ImageUploader } from '../components/image-uploader/image-uploader';
-import { CreatePostDto } from '../../../core/models/post.model';
+import { AdminPostService } from '../../../services/admin-post.service';
+import { RichTextEditor } from '../../../../../shared/components/rich-text-editor/rich-text-editor';
+import { ImageUploader, ImageUploadFn, ImageDeleteFn } from '../../../../../shared/components/image-uploader/image-uploader';
+import { CreatePostDto } from '../../../../../core/models/post.model';
 
 @Component({
   selector: 'app-post-editor',
@@ -32,6 +32,9 @@ export class PostEditor implements OnInit {
   errorMessage = signal('');
   isEditMode = signal(false);
   postId = signal<string | null>(null);
+
+  uploadImage: ImageUploadFn = (file: File) => this.adminPostService.uploadImage(file);
+  deleteImage: ImageDeleteFn = (url: string) => this.adminPostService.deleteImage(url);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -102,7 +105,7 @@ export class PostEditor implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.router.navigate(['/admin/posts']);
+        void this.router.navigate(['/admin/posts']);
       },
       error: (error) => {
         console.error('Failed to save post:', error);

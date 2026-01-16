@@ -1,9 +1,9 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { AdminPostService } from '../services/admin-post.service';
-import { AuthService } from '../services/auth.service';
-import { Post } from '../../../core/models/post.model';
+import { AdminPostService } from '../../../services/admin-post.service';
+import { AuthService } from '../../../services/auth.service';
+import { Post } from '../../../../../core/models/post.model';
 
 @Component({
   selector: 'app-post-list',

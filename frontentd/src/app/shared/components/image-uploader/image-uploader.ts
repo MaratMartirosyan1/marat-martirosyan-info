@@ -1,5 +1,8 @@
-import { Component, inject, signal, output, input } from '@angular/core';
-import { AdminPostService } from '../../services/admin-post.service';
+import { Component, signal, output, input } from '@angular/core';
+import { Observable } from 'rxjs';
+
+export type ImageUploadFn = (file: File) => Observable<{ url: string }>;
+export type ImageDeleteFn = (url: string) => Observable<void>;
 
 @Component({
   selector: 'app-image-uploader',
@@ -7,13 +10,14 @@ import { AdminPostService } from '../../services/admin-post.service';
   templateUrl: './image-uploader.html',
 })
 export class ImageUploader {
-  private adminPostService = inject(AdminPostService);
-
+  uploadFn = input.required<ImageUploadFn>();
+  deleteFn = input<ImageDeleteFn>();
   initialImageUrl = input<string>('');
   imageUrlChange = output<string>();
 
   previewUrl = signal<string>('');
   isUploading = signal(false);
+  isDeleting = signal(false);
   isDragging = signal(false);
   errorMessage = signal('');
 
@@ -74,7 +78,7 @@ export class ImageUploader {
 
     this.isUploading.set(true);
 
-    this.adminPostService.uploadImage(file).subscribe({
+    this.uploadFn()(file).subscribe({
       next: (response) => {
         this.imageUrlChange.emit(response.url);
         this.previewUrl.set(response.url);
@@ -91,7 +95,26 @@ export class ImageUploader {
 
   removeImage(event: Event): void {
     event.stopPropagation();
-    this.previewUrl.set('');
-    this.imageUrlChange.emit('');
+    const currentUrl = this.previewUrl();
+
+    if (currentUrl && currentUrl.startsWith('http') && this.deleteFn()) {
+      this.isDeleting.set(true);
+      this.deleteFn()!(currentUrl).subscribe({
+        next: () => {
+          this.previewUrl.set('');
+          this.imageUrlChange.emit('');
+          this.isDeleting.set(false);
+        },
+        error: (error) => {
+          console.error('Delete failed:', error);
+          this.previewUrl.set('');
+          this.imageUrlChange.emit('');
+          this.isDeleting.set(false);
+        },
+      });
+    } else {
+      this.previewUrl.set('');
+      this.imageUrlChange.emit('');
+    }
   }
 }

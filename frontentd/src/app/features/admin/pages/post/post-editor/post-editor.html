@@ -29,6 +29,8 @@
             Cover Image
           </label>
           <app-image-uploader
+            [uploadFn]="uploadImage"
+            [deleteFn]="deleteImage"
             [initialImageUrl]="postForm.get('image')?.value || ''"
             (imageUrlChange)="onImageChange($event)"
           ></app-image-uploader>
@@ -47,22 +49,6 @@
           />
           @if (postForm.get('title')?.invalid && postForm.get('title')?.touched) {
             <p class="mt-1 text-sm text-red-600 dark:text-red-400">Title is required</p>
-          }
-        </div>
-
-        <div>
-          <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Description *
-          </label>
-          <textarea
-            id="description"
-            formControlName="description"
-            rows="3"
-            placeholder="Brief description of your post"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-angular-red focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-          ></textarea>
-          @if (postForm.get('description')?.invalid && postForm.get('description')?.touched) {
-            <p class="mt-1 text-sm text-red-600 dark:text-red-400">Description is required</p>
           }
         </div>
 
