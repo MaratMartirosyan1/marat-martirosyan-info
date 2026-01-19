@@ -1,18 +1,17 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { AdminPostService } from '../../../services/admin-post.service';
-import { AuthService } from '../../../services/auth.service';
-import { Post } from '../../../../../core/models/post.model';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {Router, RouterLink} from '@angular/router';
+import {AdminPostService} from '../../../services/admin-post.service';
+import {Post} from '../../../../../core/models/post.model';
+import {PostCard} from '../../../components/post-card/post-card';
 
 @Component({
   selector: 'app-post-list',
-  imports: [RouterLink, DatePipe],
-  templateUrl: './post-list.html',
+  imports: [RouterLink, PostCard],
+  templateUrl: './post-list.html'
 })
 export class PostList implements OnInit {
   private adminPostService = inject(AdminPostService);
-  private authService = inject(AuthService);
+  private router = inject(Router);
 
   posts = signal<Post[]>([]);
   isLoading = signal(true);
@@ -74,7 +73,7 @@ export class PostList implements OnInit {
     }
   }
 
-  logout(): void {
-    this.authService.logout();
+  editPost(id: string): void {
+    void this.router.navigate(['/admin/posts/edit', id]);
   }
 }

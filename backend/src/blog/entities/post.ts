@@ -12,9 +12,6 @@ export class Post {
   title: string;
 
   @Column('text')
-  description: string;
-
-  @Column('text')
   content: string;
 
   @Column({ nullable: true })

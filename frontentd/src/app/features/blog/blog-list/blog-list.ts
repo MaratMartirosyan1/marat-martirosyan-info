@@ -20,10 +20,11 @@ import {BLOG_LIST_CONTENT, BlogCategory, BlogSortOption, POSTS_DEFAULT_REQUEST_C
 import {Pagination} from '../../../shared/components/pagination/pagination';
 import {Dropdown} from '../../../shared/components/dropdown/dropdown';
 import {BlogListQueryParams, PostsRequestCriteria} from '../../../core/models/post.model';
+import {BlogCard} from '../components/blog-card/blog-card';
 
 @Component({
   selector: 'app-blog-list',
-  imports: [RouterLink, NgIconComponent, LoadingSpinner, FormsModule, Pagination, Dropdown],
+  imports: [RouterLink, NgIconComponent, LoadingSpinner, FormsModule, Pagination, Dropdown, BlogCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({lucideClock, lucideTag, lucideSearch, lucideArrowUp, lucideArrowDown, lucideArrowUpDown, lucideFilter})],
   templateUrl: './blog-list.html',

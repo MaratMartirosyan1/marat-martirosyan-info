@@ -4,12 +4,11 @@ export interface Post {
   id?: string;
   slug: string;
   title: string;
-  description: string;
   date: string;
   author: string;
   tags: string[];
   category: string;
-  image?: string;
+  coverImage?: string;
   readTime?: number;
   featured?: boolean;
   status?: 'draft' | 'published';
@@ -25,9 +24,8 @@ export interface PostDetail extends Post {
 
 export interface CreatePostDto {
   title: string;
-  description: string;
   content: string;
-  image?: string;
+  coverImage?: string;
   tags: string[];
   category: string;
   featured: boolean;

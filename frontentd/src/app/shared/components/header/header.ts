@@ -12,6 +12,7 @@ import { AuthService } from '../../../features/admin/services/auth.service';
   providers: [provideIcons({ lucideMenu, lucideX, lucideUser, lucideLayoutDashboard, lucideLogOut, lucideChevronDown })],
   templateUrl: './header.html',
   styleUrls: ['./header.scss'],
+  host: { style: 'display: contents' },
 })
 export class Header {
   private authService = inject(AuthService);

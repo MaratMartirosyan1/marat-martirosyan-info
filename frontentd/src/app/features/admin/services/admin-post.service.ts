@@ -1,9 +1,9 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../../environments/environment';
-import {Post, CreatePostDto, UpdatePostDto} from '../../../core/models/post.model';
-import {ApiSingleResponse, ApiListResponse} from '../../../core/models/api-response';
+import {CreatePostDto, Post, UpdatePostDto} from '../../../core/models/post.model';
+import {ApiListResponse, ApiSingleResponse} from '../../../core/models/api-response';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +13,8 @@ export class AdminPostService {
   private readonly apiUrl = environment.apiUrl;
   private readonly postsUrl = this.apiUrl + '/admin/blog/posts'
 
-  getAll(): Observable<ApiListResponse<Post[]>> {
-    return this.http.get<ApiListResponse<Post[]>>(this.postsUrl);
+  getAll(): Observable<ApiListResponse<Post>> {
+    return this.http.get<ApiListResponse<Post>>(this.postsUrl);
   }
 
   getById(id: string): Observable<ApiSingleResponse<Post>> {

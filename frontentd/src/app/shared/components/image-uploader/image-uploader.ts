@@ -1,5 +1,5 @@
-import { Component, signal, output, input } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Component, signal, output, input, linkedSignal} from '@angular/core';
+import {Observable} from 'rxjs';
 
 export type ImageUploadFn = (file: File) => Observable<{ url: string }>;
 export type ImageDeleteFn = (url: string) => Observable<void>;
@@ -15,17 +15,11 @@ export class ImageUploader {
   initialImageUrl = input<string>('');
   imageUrlChange = output<string>();
 
-  previewUrl = signal<string>('');
+  previewUrl = linkedSignal<string>(() => this.initialImageUrl());
   isUploading = signal(false);
   isDeleting = signal(false);
   isDragging = signal(false);
   errorMessage = signal('');
-
-  constructor() {
-    if (this.initialImageUrl()) {
-      this.previewUrl.set(this.initialImageUrl());
-    }
-  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

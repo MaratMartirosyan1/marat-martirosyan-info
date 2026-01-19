@@ -1,3 +1,5 @@
+import { ApiListResponse, ApiSingleResponse } from '../../common/interfaces/api-response';
+
 export interface Project {
   id: string;
   title: string;
@@ -10,12 +12,5 @@ export interface Project {
   featured: boolean;
 }
 
-export interface ProjectsResponse {
-  data: Project[];
-  meta: {
-    currentPage: number;
-    totalPages: number;
-    totalCount: number;
-    pageSize: number;
-  }
-}
+export type ProjectsResponse = ApiListResponse<Project>;
+export type ProjectResponse = ApiSingleResponse<Project>;

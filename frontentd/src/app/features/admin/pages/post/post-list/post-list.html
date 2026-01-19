@@ -5,7 +5,27 @@
       New Post
     </a>
   </div>
-  <div class="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-8 text-center">
-    <p class="text-[var(--text-secondary)]">No Data</p>
-  </div>
+
+  @if (isLoading()) {
+    <div class="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-8 text-center">
+      <p class="text-[var(--text-secondary)]">Loading...</p>
+    </div>
+  } @else if (posts().length === 0) {
+    <div class="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-8 text-center">
+      <p class="text-[var(--text-secondary)]">No posts yet</p>
+    </div>
+  } @else {
+    <div class="space-y-4 flex flex-col gap-0.5">
+      @for (post of posts(); track post.id) {
+        <app-post-card
+          [post]="post"
+          (cardClick)="editPost($event)"
+          (edit)="editPost($event)"
+          (publish)="publish($event)"
+          (unpublish)="unpublish($event)"
+          (delete)="deletePost($event)"
+        />
+      }
+    </div>
+  }
 </div>

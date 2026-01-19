@@ -6,14 +6,14 @@
       </a>
       <div class="flex gap-3">
         <button
-          (click)="onSubmit('draft')"
+          (click)="onSave('draft')"
           [disabled]="isSaving()"
           class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors"
         >
           Save Draft
         </button>
         <button
-          (click)="onSubmit('published')"
+          (click)="onSave('published')"
           [disabled]="isSaving()"
           class="px-4 py-2 text-sm font-medium text-white bg-gradient-angular rounded-md hover:opacity-90 disabled:opacity-50 transition-opacity"
         >
@@ -31,7 +31,7 @@
           <app-image-uploader
             [uploadFn]="uploadImage"
             [deleteFn]="deleteImage"
-            [initialImageUrl]="postForm.get('image')?.value || ''"
+            [initialImageUrl]="postForm.get('coverImage')?.value || ''"
             (imageUrlChange)="onImageChange($event)"
           ></app-image-uploader>
         </div>

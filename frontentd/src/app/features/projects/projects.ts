@@ -21,7 +21,7 @@ export class Projects {
   private projectService = inject(ProjectService);
   private seoService = inject(SeoService);
 
-  readonly projectsResponse = toSignal(this.projectService.getProjects(), {initialValue: defaultEntityList<Project[]>([])});
+  readonly projectsResponse = toSignal(this.projectService.getProjects(), {initialValue: defaultEntityList<Project>([])});
   readonly projects = computed(() => this.projectsResponse().data)
   readonly selectedCategory = signal<ProjectCategory>('All');
   readonly categories = PROJECTS_CONTENT.categories;

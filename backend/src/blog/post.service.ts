@@ -5,6 +5,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { Post } from './entities/post';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { ApiSingleResponse, ApiListResponse } from '../common/interfaces/api-response';
 
 @Injectable()
 export class PostService {
@@ -13,7 +14,7 @@ export class PostService {
     private postRepository: Repository<Post>,
   ) {}
 
-  async create(createPostDto: CreatePostDto): Promise<Post> {
+  async create(createPostDto: CreatePostDto): Promise<ApiSingleResponse<Post>> {
     const slug = this.generateSlug(createPostDto.title);
     const sanitizedContent = this.sanitizeHtml(createPostDto.content);
 
@@ -28,10 +29,11 @@ export class PostService {
       post.publishedAt = new Date();
     }
 
-    return this.postRepository.save(post);
+    const saved = await this.postRepository.save(post);
+    return { data: saved };
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<ApiSingleResponse<Post>> {
     const post = await this.postRepository.findOne({ where: { id } });
 
     if (!post) {
@@ -53,7 +55,8 @@ export class PostService {
 
     Object.assign(post, updatePostDto);
 
-    return this.postRepository.save(post);
+    const saved = await this.postRepository.save(post);
+    return { data: saved };
   }
 
   async delete(id: string): Promise<void> {
@@ -64,7 +67,7 @@ export class PostService {
     }
   }
 
-  async publish(id: string): Promise<Post> {
+  async publish(id: string): Promise<ApiSingleResponse<Post>> {
     const post = await this.postRepository.findOne({ where: { id } });
 
     if (!post) {
@@ -74,10 +77,11 @@ export class PostService {
     post.status = 'published';
     post.publishedAt = new Date();
 
-    return this.postRepository.save(post);
+    const saved = await this.postRepository.save(post);
+    return { data: saved };
   }
 
-  async unpublish(id: string): Promise<Post> {
+  async unpublish(id: string): Promise<ApiSingleResponse<Post>> {
     const post = await this.postRepository.findOne({ where: { id } });
 
     if (!post) {
@@ -86,14 +90,15 @@ export class PostService {
 
     post.status = 'draft';
 
-    return this.postRepository.save(post);
+    const saved = await this.postRepository.save(post);
+    return { data: saved };
   }
 
-  async getAll(page: number = 1, pageSize: number = 10, search?: string, status?: string): Promise<any> {
+  async getAll(page: number = 1, pageSize: number = 10, search?: string, status?: string): Promise<ApiListResponse<Post>> {
     const query = this.postRepository.createQueryBuilder('post');
 
     if (search) {
-      query.where('post.title ILIKE :search OR post.description ILIKE :search', {
+      query.where('post.title ILIKE :search OR post.content ILIKE :search', {
         search: `%${search}%`,
       });
     }
@@ -119,17 +124,17 @@ export class PostService {
     };
   }
 
-  async getById(id: string): Promise<Post> {
+  async getById(id: string): Promise<ApiSingleResponse<Post>> {
     const post = await this.postRepository.findOne({ where: { id } });
 
     if (!post) {
       throw new NotFoundException('Post not found');
     }
 
-    return post;
+    return { data: post };
   }
 
-  async getBySlug(slug: string, status?: string): Promise<Post> {
+  async getBySlug(slug: string, status?: string): Promise<ApiSingleResponse<Post>> {
     const query: any = { slug };
     if (status) {
       query.status = status;
@@ -141,15 +146,15 @@ export class PostService {
       throw new NotFoundException('Post not found');
     }
 
-    return post;
+    return { data: post };
   }
 
-  async getPublished(page: number = 1, pageSize: number = 10, search?: string, category?: string): Promise<any> {
+  async getPublished(page: number = 1, pageSize: number = 10, search?: string, category?: string): Promise<ApiListResponse<Post>> {
     const query = this.postRepository.createQueryBuilder('post')
       .where('post.status = :status', { status: 'published' });
 
     if (search) {
-      query.andWhere('(post.title ILIKE :search OR post.description ILIKE :search)', {
+      query.andWhere('(post.title ILIKE :search OR post.content ILIKE :search)', {
         search: `%${search}%`,
       });
     }
@@ -175,12 +180,22 @@ export class PostService {
     };
   }
 
-  async getFeatured(limit: number = 3): Promise<Post[]> {
-    return this.postRepository.find({
+  async getFeatured(limit: number = 3): Promise<ApiListResponse<Post>> {
+    const posts = await this.postRepository.find({
       where: { featured: true, status: 'published' },
       order: { publishedAt: 'DESC' },
       take: limit,
     });
+
+    return {
+      data: posts,
+      meta: {
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: posts.length,
+        pageSize: limit,
+      },
+    };
   }
 
   private generateSlug(title: string): string {

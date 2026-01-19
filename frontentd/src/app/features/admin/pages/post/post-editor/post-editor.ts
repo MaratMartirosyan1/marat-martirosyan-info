@@ -1,10 +1,14 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { AdminPostService } from '../../../services/admin-post.service';
-import { RichTextEditor } from '../../../../../shared/components/rich-text-editor/rich-text-editor';
-import { ImageUploader, ImageUploadFn, ImageDeleteFn } from '../../../../../shared/components/image-uploader/image-uploader';
-import { CreatePostDto } from '../../../../../core/models/post.model';
+import {Component, inject, signal, OnInit} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, ActivatedRoute, RouterLink} from '@angular/router';
+import {AdminPostService} from '../../../services/admin-post.service';
+import {RichTextEditor} from '../../../../../shared/components/rich-text-editor/rich-text-editor';
+import {
+  ImageUploader,
+  ImageUploadFn,
+  ImageDeleteFn
+} from '../../../../../shared/components/image-uploader/image-uploader';
+import {CreatePostDto} from '../../../../../core/models/post.model';
 
 @Component({
   selector: 'app-post-editor',
@@ -19,9 +23,8 @@ export class PostEditor implements OnInit {
 
   postForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
-    description: ['', Validators.required],
     content: ['', Validators.required],
-    image: [''],
+    coverImage: [''],
     category: ['', Validators.required],
     tagsString: ['', Validators.required],
     author: ['', Validators.required],
@@ -51,9 +54,8 @@ export class PostEditor implements OnInit {
         const post = response.data;
         this.postForm.patchValue({
           title: post.title,
-          description: post.description,
           content: post.content || '',
-          image: post.image,
+          coverImage: post.coverImage,
           category: post.category,
           tagsString: post.tags.join(', '),
           author: post.author,
@@ -68,18 +70,16 @@ export class PostEditor implements OnInit {
   }
 
   onImageChange(url: string): void {
-    this.postForm.patchValue({ image: url });
+    this.postForm.patchValue({coverImage: url});
   }
 
   onContentChange(content: string): void {
-    this.postForm.patchValue({ content });
+    this.postForm.patchValue({content});
   }
 
-  onSubmit(status: 'draft' | 'published'): void {
+  onSave(status: 'draft' | 'published'): void {
     if (this.postForm.invalid) {
-      Object.keys(this.postForm.controls).forEach((key) => {
-        this.postForm.get(key)?.markAsTouched();
-      });
+      this.postForm.markAllAsTouched()
       return;
     }
 
@@ -89,9 +89,8 @@ export class PostEditor implements OnInit {
     const formValue = this.postForm.getRawValue();
     const postData: CreatePostDto = {
       title: formValue.title,
-      description: formValue.description,
       content: formValue.content,
-      image: formValue.image,
+      coverImage: formValue.coverImage,
       category: formValue.category,
       tags: formValue.tagsString.split(',').map((tag) => tag.trim()).filter((tag) => tag),
       author: formValue.author,

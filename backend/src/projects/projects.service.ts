@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {Project, ProjectsResponse} from './interfaces/project.interface';
+import {Project, ProjectsResponse, ProjectResponse} from './interfaces/project.interface';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -43,7 +43,11 @@ export class ProjectsService {
         };
     }
 
-    getProjectById(id: string): Project | undefined {
-        return this.projects.find((project) => project.id === id);
+    getProjectById(id: string): ProjectResponse | undefined {
+        const project = this.projects.find((project) => project.id === id);
+        if (!project) {
+            return undefined;
+        }
+        return { data: project };
     }
 }

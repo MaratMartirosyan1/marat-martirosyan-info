@@ -12,13 +12,13 @@ export class BlogService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  getFeaturedPosts(limit: number = 3): Observable<ApiListResponse<Post[]>> {
-    return this.http.get<ApiListResponse<Post[]>>(`${this.apiUrl}/blog/featured`, {
+  getFeaturedPosts(limit: number = 3): Observable<ApiListResponse<Post>> {
+    return this.http.get<ApiListResponse<Post>>(`${this.apiUrl}/blog/featured`, {
       params: {limit: limit.toString()}
     });
   }
 
-  getAll(params: PostsRequestCriteria): Observable<ApiListResponse<Post[]>> {
+  getAll(params: PostsRequestCriteria): Observable<ApiListResponse<Post>> {
     let httpParams = new HttpParams();
 
     if (params.page) httpParams = httpParams.set('page', params.page.toString());
@@ -34,7 +34,7 @@ export class BlogService {
       'Expires': '0'
     });
 
-    return this.http.get<ApiListResponse<Post[]>>(`${this.apiUrl}/blog/posts`, {
+    return this.http.get<ApiListResponse<Post>>(`${this.apiUrl}/blog/posts`, {
       params: httpParams,
       headers
     });
