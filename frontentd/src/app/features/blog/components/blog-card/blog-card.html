@@ -25,9 +25,13 @@
         }
       </div>
 
-      <h2 class="text-xl font-bold mb-3 group-hover:text-gradient-angular transition-colors">
+      <h2 class="text-xl font-bold mb-2 group-hover:text-gradient-angular transition-colors">
         {{ post().title }}
       </h2>
+
+      @if (post().intro) {
+        <p class="text-sm text-[var(--text-secondary)] mb-3 line-clamp-2">{{ post().intro }}</p>
+      }
 
       <div class="flex items-center gap-2 text-sm text-[var(--text-secondary)] mb-3">
         <ng-icon name="lucideUser" class="w-4 h-4" />

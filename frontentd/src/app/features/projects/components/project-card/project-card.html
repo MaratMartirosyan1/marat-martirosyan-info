@@ -1,0 +1,62 @@
+<article class="group bg-[var(--bg-surface)] rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300 animate-slide-up">
+  <a [routerLink]="['/projects', project().id]" class="block">
+    <div class="aspect-video bg-[var(--bg-primary)] overflow-hidden">
+      @if (project().image) {
+        <img [src]="project().image" [alt]="project().title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+      } @else {
+        <div class="w-full h-full bg-gradient-angular opacity-20 group-hover:opacity-30 transition-opacity"></div>
+      }
+    </div>
+
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-3">
+        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-gradient-angular text-white">
+          {{ project().category }}
+        </span>
+        @if (project().featured) {
+          <span class="inline-flex items-center gap-1 text-xs text-angular-pink font-semibold">
+            Featured
+          </span>
+        }
+      </div>
+
+      <h3 class="text-xl font-bold mb-2 group-hover:text-gradient-angular transition-colors">
+        {{ project().title }}
+      </h3>
+
+      <p class="text-sm text-[var(--text-secondary)] mb-4 line-clamp-2">{{ project().intro }}</p>
+
+      <div class="flex flex-wrap gap-2 mb-4">
+        @for (tech of project().technologies.slice(0, 4); track tech) {
+          <span class="px-2 py-1 text-xs rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)]">
+            {{ tech }}
+          </span>
+        }
+        @if (project().technologies.length > 4) {
+          <span class="px-2 py-1 text-xs rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-secondary)]">
+            +{{ project().technologies.length - 4 }}
+          </span>
+        }
+      </div>
+
+      <div class="flex items-center gap-3">
+        @if (project().demoUrl) {
+          <span
+            class="inline-flex items-center gap-1 text-sm text-angular-purple hover:text-angular-pink transition-colors"
+          >
+            <ng-icon name="lucideExternalLink" class="w-4 h-4"/>
+            Demo
+          </span>
+        }
+        @if (project().githubUrl) {
+          <span
+            class="inline-flex items-center gap-1 text-sm text-angular-purple hover:text-angular-pink transition-colors"
+          >
+            <ng-icon name="lucideGithub" class="w-4 h-4"/>
+            Code
+          </span>
+        }
+      </div>
+    </div>
+  </a>
+</article>

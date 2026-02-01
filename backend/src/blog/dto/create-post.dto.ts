@@ -1,5 +1,6 @@
 export class CreatePostDto {
   title: string;
+  intro?: string;
   content: string;
   coverImage?: string;
   tags: string[];

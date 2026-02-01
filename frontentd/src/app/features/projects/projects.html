@@ -27,54 +27,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (project of filteredProjects(); track project.id) {
-          <div
-            class="group bg-[var(--bg-surface)] rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300 animate-slide-up"
-          >
-            <div class="aspect-video bg-gradient-angular opacity-20"></div>
-
-            <div class="p-6">
-              <h3 class="text-xl font-bold mb-2 group-hover:text-gradient-angular transition-colors">
-                {{ project.title }}
-              </h3>
-
-              <p class="text-sm text-[var(--text-secondary)] mb-4">{{ project.description }}</p>
-
-              <div class="flex flex-wrap gap-2 mb-4">
-                @for (tech of project.technologies; track tech) {
-                  <span
-                    class="px-2 py-1 text-xs rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)]"
-                  >
-                    {{ tech }}
-                  </span>
-                }
-              </div>
-
-              <div class="flex items-center gap-3">
-                @if (project.demoUrl) {
-                  <a
-                    [href]="project.demoUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1 text-sm text-angular-purple hover:text-angular-pink transition-colors"
-                  >
-                    <ng-icon name="lucideExternalLink" class="w-4 h-4"/>
-                    Demo
-                  </a>
-                }
-                @if (project.githubUrl) {
-                  <a
-                    [href]="project.githubUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1 text-sm text-angular-purple hover:text-angular-pink transition-colors"
-                  >
-                    <ng-icon name="lucideGithub" class="w-4 h-4"/>
-                    Code
-                  </a>
-                }
-              </div>
-            </div>
-          </div>
+          <app-project-card [project]="project" />
         }
       </div>
 

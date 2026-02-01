@@ -1,19 +1,17 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {NgIconComponent, provideIcons} from '@ng-icons/core';
-import {lucideExternalLink, lucideFilter, lucideGithub} from '@ng-icons/lucide';
 import {SeoService} from '../../core/services/seo.service';
 import {ProjectService} from '../../core/services/project.service';
 import {SEO_DATA} from '../../core/constants/seo.constants';
 import {ProjectCategory, PROJECTS_CONTENT} from './projects.constants';
 import {defaultEntityList} from '../../shared/utils/default-entity.util';
 import {Project} from '../../core/models/project.model';
+import {ProjectCard} from './components/project-card/project-card';
 
 @Component({
   selector: 'app-projects',
-  imports: [NgIconComponent],
+  imports: [ProjectCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideIcons({lucideGithub, lucideExternalLink, lucideFilter})],
   templateUrl: './projects.html',
   styleUrls: ['./projects.scss'],
 })

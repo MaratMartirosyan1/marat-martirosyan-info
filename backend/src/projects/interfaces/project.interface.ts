@@ -3,6 +3,7 @@ import { ApiListResponse, ApiSingleResponse } from '../../common/interfaces/api-
 export interface Project {
   id: string;
   title: string;
+  intro: string;
   description: string;
   image: string;
   technologies: string[];

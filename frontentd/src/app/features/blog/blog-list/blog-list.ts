@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
 import {rxResource, toSignal} from '@angular/core/rxjs-interop';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NgIconComponent, provideIcons} from '@ng-icons/core';
 import {
   lucideArrowDown,
@@ -24,7 +24,7 @@ import {BlogCard} from '../components/blog-card/blog-card';
 
 @Component({
   selector: 'app-blog-list',
-  imports: [RouterLink, NgIconComponent, LoadingSpinner, FormsModule, Pagination, Dropdown, BlogCard],
+  imports: [NgIconComponent, LoadingSpinner, FormsModule, Pagination, Dropdown, BlogCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({lucideClock, lucideTag, lucideSearch, lucideArrowUp, lucideArrowDown, lucideArrowUpDown, lucideFilter})],
   templateUrl: './blog-list.html',

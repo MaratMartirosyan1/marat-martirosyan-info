@@ -21,7 +21,7 @@ import { Admin } from './auth/entities/admin';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [Post, Admin],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: false,
       logging: process.env.NODE_ENV !== 'production',
     }),
     AuthModule,

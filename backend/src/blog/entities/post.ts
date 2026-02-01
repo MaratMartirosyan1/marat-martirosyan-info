@@ -11,6 +11,9 @@ export class Post {
   @Column()
   title: string;
 
+  @Column({ nullable: true })
+  intro: string;
+
   @Column('text')
   content: string;
 

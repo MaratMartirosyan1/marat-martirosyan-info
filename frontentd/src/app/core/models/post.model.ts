@@ -4,6 +4,7 @@ export interface Post {
   id?: string;
   slug: string;
   title: string;
+  intro?: string;
   date: string;
   author: string;
   tags: string[];
@@ -24,6 +25,7 @@ export interface PostDetail extends Post {
 
 export interface CreatePostDto {
   title: string;
+  intro?: string;
   content: string;
   coverImage?: string;
   tags: string[];

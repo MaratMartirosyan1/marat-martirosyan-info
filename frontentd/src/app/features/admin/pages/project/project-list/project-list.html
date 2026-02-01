@@ -1,0 +1,29 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-[var(--text-primary)]">Projects</h1>
+    <a routerLink="new" class="px-4 py-2 bg-gradient-angular text-white rounded-lg hover:opacity-90 transition-opacity">
+      New Project
+    </a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-8 text-center">
+      <p class="text-[var(--text-secondary)]">Loading...</p>
+    </div>
+  } @else if (projects().length === 0) {
+    <div class="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-color)] p-8 text-center">
+      <p class="text-[var(--text-secondary)]">No projects yet</p>
+    </div>
+  } @else {
+    <div class="space-y-4 flex flex-col gap-0.5">
+      @for (project of projects(); track project.id) {
+        <app-project-card
+          [project]="project"
+          (cardClick)="editProject($event)"
+          (edit)="editProject($event)"
+          (delete)="deleteProject($event)"
+        />
+      }
+    </div>
+  }
+</div>

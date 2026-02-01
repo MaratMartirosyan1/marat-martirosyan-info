@@ -23,6 +23,7 @@ export class PostEditor implements OnInit {
 
   postForm = this.fb.nonNullable.group({
     title: ['', Validators.required],
+    intro: [''],
     content: ['', Validators.required],
     coverImage: [''],
     category: ['', Validators.required],
@@ -54,6 +55,7 @@ export class PostEditor implements OnInit {
         const post = response.data;
         this.postForm.patchValue({
           title: post.title,
+          intro: post.intro || '',
           content: post.content || '',
           coverImage: post.coverImage,
           category: post.category,
@@ -89,6 +91,7 @@ export class PostEditor implements OnInit {
     const formValue = this.postForm.getRawValue();
     const postData: CreatePostDto = {
       title: formValue.title,
+      intro: formValue.intro || undefined,
       content: formValue.content,
       coverImage: formValue.coverImage,
       category: formValue.category,

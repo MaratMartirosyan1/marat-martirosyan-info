@@ -1,0 +1,98 @@
+<div class="min-h-screen py-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <a
+        routerLink="/projects"
+        class="inline-flex items-center gap-2 text-angular-red hover:text-angular-purple mb-8 transition-colors"
+      >
+        <ng-icon name="lucideArrowLeft" class="w-5 h-5" />
+        Back to Projects
+      </a>
+
+      @if (loading()) {
+        <app-loading-spinner />
+      } @else if (project()) {
+        <article class="animate-fade-in">
+          @if (project()!.image) {
+            <div class="relative aspect-[16/9] mb-8 overflow-hidden rounded-xl">
+              <img
+                [src]="project()!.image"
+                [alt]="project()!.title"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          } @else {
+            <div class="relative aspect-[16/9] mb-8 overflow-hidden rounded-xl bg-gradient-angular opacity-20"></div>
+          }
+
+          <header class="mb-8">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="px-3 py-1 text-sm font-semibold rounded-full bg-gradient-angular text-white">
+                {{ project()!.category }}
+              </span>
+              @if (project()!.featured) {
+                <span class="inline-flex items-center gap-1 px-3 py-1 text-sm font-semibold rounded-full bg-purple-500/10 text-purple-500">
+                  <ng-icon name="lucideStar" class="w-4 h-4" />
+                  Featured
+                </span>
+              }
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl font-bold mb-6">{{ project()!.title }}</h1>
+
+            <div class="flex flex-wrap gap-2 mb-6">
+              @for (tech of technologies(); track tech) {
+                <span
+                  class="px-3 py-1 text-sm rounded-full bg-[var(--bg-surface)] border border-[var(--border-color)]"
+                >
+                  {{ tech }}
+                </span>
+              }
+            </div>
+
+            <div class="flex flex-wrap gap-4 mb-8">
+              @if (project()!.demoUrl) {
+                <a
+                  [href]="project()!.demoUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-angular text-white font-semibold hover:scale-105 transition-transform"
+                >
+                  <ng-icon name="lucideExternalLink" class="w-5 h-5" />
+                  View Demo
+                </a>
+              }
+              @if (project()!.githubUrl) {
+                <a
+                  [href]="project()!.githubUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-[var(--border-color)] text-[var(--text-primary)] font-semibold hover:border-angular-red hover:text-angular-red transition-colors"
+                >
+                  <ng-icon name="lucideGithub" class="w-5 h-5" />
+                  View Code
+                </a>
+              }
+            </div>
+          </header>
+
+          <app-content-renderer [content]="project()!.description || ''" />
+        </article>
+      } @else {
+        <div class="text-center py-12">
+          <h2 class="text-2xl font-bold mb-4">Project Not Found</h2>
+          <p class="text-[var(--text-secondary)] mb-8">
+            The project you're looking for doesn't exist
+          </p>
+          <a
+            routerLink="/projects"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-angular text-white font-semibold hover:scale-105 transition-transform"
+          >
+            <ng-icon name="lucideArrowLeft" class="w-5 h-5" />
+            Back to Projects
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>

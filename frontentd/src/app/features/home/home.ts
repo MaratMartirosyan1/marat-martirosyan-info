@@ -8,10 +8,11 @@ import {SeoService} from '../../core/services/seo.service';
 import {SEO_DATA} from '../../core/constants/seo.constants';
 import {defaultEntityList} from '../../shared/utils/default-entity.util';
 import {Post} from '../../core/models/post.model';
+import {BlogCard} from '../blog/components/blog-card/blog-card';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, NgIconComponent],
+  imports: [RouterLink, NgIconComponent, BlogCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideIcons({lucideArrowRight, lucideCode, lucideRocket, lucideStar})],
   templateUrl: './home.html',
