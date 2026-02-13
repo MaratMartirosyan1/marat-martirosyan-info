@@ -8,7 +8,7 @@
     "backend:debug": "nest start --debug --watch",
     "start": "node dist/main",
     "build": "npx nest build",
-    "seed": "ts-node src/scripts/seed.ts",
+    "seed": "node dist/scripts/seed.js",
     "migration:run": "typeorm migration:run -d dist/data-source.js",
     "migration:revert": "typeorm migration:revert -d dist/data-source.js"
   },
