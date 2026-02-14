@@ -9,6 +9,8 @@ export interface Project {
   demoUrl?: string;
   githubUrl?: string;
   featured?: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateProjectDto {

@@ -10,22 +10,22 @@ export class AdminProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @HttpPost()
-  async create(@Body() createProjectDto: CreateProjectDto) {
+  create(@Body() createProjectDto: CreateProjectDto) {
     return this.projectsService.create(createProjectDto);
   }
 
   @Get()
-  async getAll() {
-    return this.projectsService.getAllProjects();
+  getAll() {
+    return this.projectsService.getAll();
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string) {
-    return this.projectsService.getProjectById(id);
+  getById(@Param('id') id: string) {
+    return this.projectsService.getById(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
     return this.projectsService.update(id, updateProjectDto);
   }
 

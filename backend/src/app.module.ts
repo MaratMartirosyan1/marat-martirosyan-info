@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { Post } from './blog/entities/post';
 import { Admin } from './auth/entities/admin';
+import { Project } from './projects/entities/project';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { Admin } from './auth/entities/admin';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [Post, Admin],
+      entities: [Post, Admin, Project],
       synchronize: false,
       logging: process.env.NODE_ENV !== 'production',
     }),

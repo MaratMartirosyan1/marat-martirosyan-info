@@ -1,120 +1,111 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {Project, ProjectsResponse, ProjectResponse} from './interfaces/project.interface';
-import {CreateProjectDto} from './dto/create-project.dto';
-import {UpdateProjectDto} from './dto/update-project.dto';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import DOMPurify from 'isomorphic-dompurify';
+import { Project } from './entities/project';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+import { ApiSingleResponse, ApiListResponse } from '../common/interfaces/api-response';
 
 @Injectable()
 export class ProjectsService {
-    private projects: Project[];
-    private readonly dataPath = path.join(process.cwd(), 'src/assets/data/projects.json');
+  constructor(
+    @InjectRepository(Project)
+    private projectRepository: Repository<Project>,
+  ) {}
 
-    constructor() {
-        this.loadProjects();
+  async create(createProjectDto: CreateProjectDto): Promise<ApiSingleResponse<Project>> {
+    const sanitizedDescription = this.sanitizeHtml(createProjectDto.description);
+
+    const project = this.projectRepository.create({
+      ...createProjectDto,
+      description: sanitizedDescription,
+    });
+
+    const saved = await this.projectRepository.save(project);
+    return { data: saved };
+  }
+
+  async update(id: string, updateProjectDto: UpdateProjectDto): Promise<ApiSingleResponse<Project>> {
+    const project = await this.projectRepository.findOne({ where: { id } });
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
     }
 
-    private loadProjects(): void {
-        const rawData = fs.readFileSync(this.dataPath, 'utf-8');
-        this.projects = JSON.parse(rawData);
+    if (updateProjectDto.description) {
+      updateProjectDto.description = this.sanitizeHtml(updateProjectDto.description);
     }
 
-    private saveProjects(): void {
-        fs.writeFileSync(this.dataPath, JSON.stringify(this.projects, null, 2));
+    Object.assign(project, updateProjectDto);
+
+    const saved = await this.projectRepository.save(project);
+    return { data: saved };
+  }
+
+  async delete(id: string): Promise<void> {
+    const result = await this.projectRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Project not found');
+    }
+  }
+
+  async getAll(page: number = 1, pageSize: number = 10): Promise<ApiListResponse<Project>> {
+    const [projects, totalCount] = await this.projectRepository.findAndCount({
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return {
+      data: projects,
+      meta: {
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / pageSize),
+        totalCount,
+        pageSize,
+      },
+    };
+  }
+
+  async getById(id: string): Promise<ApiSingleResponse<Project>> {
+    const project = await this.projectRepository.findOne({ where: { id } });
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
     }
 
-    private generateId(title: string): string {
-        return title
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-|-$/g, '');
-    }
+    return { data: project };
+  }
 
-    getAllProjects(): ProjectsResponse {
-        return {
-            data: this.projects,
-            meta: {
-                currentPage: 1,
-                totalPages: 1,
-                totalCount: this.projects.length,
-                pageSize: this.projects.length,
-            }
-        };
-    }
+  async getFeatured(limit: number = 3): Promise<ApiListResponse<Project>> {
+    const projects = await this.projectRepository.find({
+      where: { featured: true },
+      order: { createdAt: 'DESC' },
+      take: limit,
+    });
 
-    getFeaturedProjects(): ProjectsResponse {
-        const featured = this.projects.filter((project) => project.featured);
+    return {
+      data: projects,
+      meta: {
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: projects.length,
+        pageSize: limit,
+      },
+    };
+  }
 
-        return {
-            data: featured,
-            meta: {
-                currentPage: 1,
-                totalPages: 1,
-                totalCount: featured.length,
-                pageSize: featured.length,
-            }
-        };
-    }
-
-    getProjectById(id: string): ProjectResponse | undefined {
-        const project = this.projects.find((project) => project.id === id);
-        if (!project) {
-            return undefined;
-        }
-        return { data: project };
-    }
-
-    create(createProjectDto: CreateProjectDto): ProjectResponse {
-        const id = this.generateId(createProjectDto.title);
-
-        const existingProject = this.projects.find(p => p.id === id);
-        if (existingProject) {
-            throw new Error(`Project with id "${id}" already exists`);
-        }
-
-        const newProject: Project = {
-            id,
-            title: createProjectDto.title,
-            intro: createProjectDto.intro,
-            description: createProjectDto.description,
-            image: createProjectDto.image || '',
-            technologies: createProjectDto.technologies,
-            category: createProjectDto.category,
-            demoUrl: createProjectDto.demoUrl,
-            githubUrl: createProjectDto.githubUrl,
-            featured: createProjectDto.featured,
-        };
-
-        this.projects.unshift(newProject);
-        this.saveProjects();
-
-        return { data: newProject };
-    }
-
-    update(id: string, updateProjectDto: UpdateProjectDto): ProjectResponse {
-        const index = this.projects.findIndex(p => p.id === id);
-        if (index === -1) {
-            throw new NotFoundException(`Project with id "${id}" not found`);
-        }
-
-        const updatedProject: Project = {
-            ...this.projects[index],
-            ...updateProjectDto,
-        };
-
-        this.projects[index] = updatedProject;
-        this.saveProjects();
-
-        return { data: updatedProject };
-    }
-
-    delete(id: string): void {
-        const index = this.projects.findIndex(p => p.id === id);
-        if (index === -1) {
-            throw new NotFoundException(`Project with id "${id}" not found`);
-        }
-
-        this.projects.splice(index, 1);
-        this.saveProjects();
-    }
+  private sanitizeHtml(html: string): string {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: [
+        'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3',
+        'ul', 'ol', 'li', 'blockquote', 'code', 'pre',
+        'a', 'img', 'span', 'div'
+      ],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'target', 'rel'],
+      ALLOW_DATA_ATTR: false,
+    });
+  }
 }
